@@ -15,6 +15,9 @@ $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
 );
 
+/*this is to load the constant file*/
+require app_path().'/constants.php';
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
