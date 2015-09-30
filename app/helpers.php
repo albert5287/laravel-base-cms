@@ -1,5 +1,6 @@
 <?php
 use App\Language;
+use App\Module;
 
 /**
  * Created by PhpStorm.
@@ -8,8 +9,17 @@ use App\Language;
  * Time: 16:35
  */
 
+//TODO
+//filter by active languages
+//maybe change to the model
 function getActiveLanguages(){
     return Language::all();
+}
+//TODO
+//filter by active Modules
+//maybe change to the model
+function getActiveModules(){
+    return Module::all();
 }
 
 function insertUpdateMultiLanguage($element, $newValues){

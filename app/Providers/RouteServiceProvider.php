@@ -27,7 +27,9 @@ class RouteServiceProvider extends ServiceProvider
         //
 
         parent::boot($router);
-        $router->model('languages', 'App\Language');
+        foreach(getActiveModules() as $module) {
+            $router->model($module->name, 'App\\'.$module->class);
+        }
     }
 
     /**

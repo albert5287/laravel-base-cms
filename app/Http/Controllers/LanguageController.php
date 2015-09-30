@@ -28,13 +28,12 @@ class LanguageController extends BaseController
      */
     public function index()
     {
-        $locale = App::getLocale();
 
         $class_name = 'Language';
 
         $module = Module::where('class', $class_name)->first();
 
-        $page_title = $module->translate($locale)->title;
+        $page_title = $module->title;
 
         $header_table = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
                         'code' => trans('strings.HEADER_TABLE_FOR_CODE_IN_LANGUAGES')];

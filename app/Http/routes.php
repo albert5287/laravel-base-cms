@@ -58,4 +58,8 @@ Route::post('password/reset', [
     'as' => 'password/postReset'
 ]);
 
-Route::resource('languages', 'LanguageController');
+//create routes for the active modules
+foreach(getActiveModules() as $module){
+    Route::resource($module->name, $module->class.'Controller');
+}
+//Route::resource('languages', 'LanguageController');
