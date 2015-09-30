@@ -36,5 +36,17 @@ return [
     'LABEL_FOR_ENABLED_MODULE_FORM' => 'Enabled',
     'LABEL_FOR_TITLE_MODULE_FORM' => 'Title',
     'TITLE_EDIT_MODULE_PAGE' => 'Edit Module',
-
+    //String for module Company
+    'HEADER_TABLE_FOR_NAME_IN_COMPANIES' => 'Name',
+    'HEADER_TABLE_FOR_EMAIL_IN_COMPANIES' => 'Email',
+    'TITLE_CREATE_COMPANY_PAGE' => 'Create Company',
+    'TITLE_EDIT_COMPANY_PAGE' => 'Edit Company',
+    'LABEL_FOR_NAME_COMPANY_FORM' => 'Name',
+    'LABEL_FOR_STREET_COMPANY_FORM' => 'Street',
+    'LABEL_FOR_CITY_COMPANY_FORM' => 'City',
+    'LABEL_FOR_PHONE_COMPANY_FORM' => 'Phone',
+    'LABEL_FOR_EMAIL_COMPANY_EMAIL' => 'Email',
+    'MESSAGE_SUCCESS_CREATE_COMPANY' => 'Company Created',
+    'MESSAGE_SUCCESS_EDIT_COMPANY' => 'Company Edited',
+    'MESSAGE_SUCCESS_DELETE_COMPANY' => 'Company Deleted',
 ];
