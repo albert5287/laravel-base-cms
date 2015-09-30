@@ -51,7 +51,6 @@ class BaseController extends Controller {
             $elements = $customQuery->orderBy($sort, $order)
                 ->paginate(PAGINATION);
         }
-
         return view(strtolower($class_name).'.index', compact('elements', 'page_title', 'header_table', 'class_name', 'sort', 'order','search', 'addButton', 'editButton', 'exportButton'));
     }
 

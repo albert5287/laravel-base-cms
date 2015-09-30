@@ -17,7 +17,8 @@ $app = new Illuminate\Foundation\Application(
 
 /*this is to load the constant file*/
 require app_path().'/constants.php';
-
+/*this is to load the helper file*/
+require app_path().'/helpers.php';
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces

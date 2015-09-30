@@ -57,3 +57,5 @@ Route::post('password/reset', [
     'uses' =>  'Auth\PasswordController@postReset',
     'as' => 'password/postReset'
 ]);
+
+Route::resource('languages', 'LanguageController');

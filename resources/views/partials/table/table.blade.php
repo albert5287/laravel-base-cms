@@ -1,10 +1,10 @@
-@include('partials.addButtonTable')
-@include('partials.exportButtonTable')
+@include('partials.table.addButtonTable')
+@include('partials.table.exportButtonTable')
 <div class="box">
     <div class="box-body">
-        @include('partials.searchBarTable')
+        @include('partials.table.searchBarTable')
         <table id="table" class="table table-bordered table-striped">
-            @include('partials.headerTable')
+            @include('partials.table.headerTable')
             <tbody>
             @foreach($elements as $element)
                 <tr>
@@ -16,9 +16,9 @@
                         @endif
                     @endforeach
                     <td>
-                        @include('partials.editButtonTable')
-                        @include('partials.pushNotificationButtonTable')
-                        @include('partials.deleteButtonTable')
+                        @include('partials.table.editButtonTable')
+                        {{--@include('partials.table.pushNotificationButtonTable')--}}
+                        @include('partials.table.deleteButtonTable')
                     </td>
                 </tr>
             @endforeach
@@ -27,6 +27,6 @@
         <div> {!! str_replace('/?', '?', $search === "" ? $elements->appends(['order' => $order, 'sort' => $sort])->render() : $elements->appends(['order' => $order, 'sort' => $sort, 'search' => $search])->render()) !!} </div>
     </div><!-- /.box-body -->
 </div><!-- /.box -->
+@include('partials.table.addButtonTable')
+@include('partials.table.scriptsTable')
 @include('partials.modal')
-@include('partials.addButtonTable')
-@include('partials.scriptsTable')

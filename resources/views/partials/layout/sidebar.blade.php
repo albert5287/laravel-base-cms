@@ -8,6 +8,7 @@
         <ul class="sidebar-menu">
             <!-- Optionally, you can add icons to the links -->
             <li class="{{HTML::isActive('home')}}"><a href="{{action('HomeController@index')}}"><span>Home</span></a> </li>
+            <li class="{{HTML::isActive('languages')}}"><a href="{{action('LanguageController@index')}}"><span>Languages</span></a> </li>
             {{--<li class="{{HTML::isActive('kategorie')}}"><a href="{{action('KategorieController@index')}}"><span>Kategorie</span></a> </li>
             <li class="{{HTML::isActive('impulse')}}"><a href="{{action('GedankenController@index')}}"><span>Impulse</span></a> </li>
             <li class="{{HTML::isActive('termine')}}"><a href="{{action('ImpulseController@index')}}"><span>Termine</span></a> </li>
