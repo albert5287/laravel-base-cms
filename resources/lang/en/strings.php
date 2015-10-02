@@ -49,4 +49,12 @@ return [
     'MESSAGE_SUCCESS_CREATE_COMPANY' => 'Company Created',
     'MESSAGE_SUCCESS_EDIT_COMPANY' => 'Company Edited',
     'MESSAGE_SUCCESS_DELETE_COMPANY' => 'Company Deleted',
+    //String for module Application
+    'HEADER_TABLE_FOR_NAME_IN_APPLICATIONS' => 'Name',
+    'TITLE_CREATE_APPLICATION_PAGE' => 'Create App',
+    'LABEL_FOR_COMPANY_APPLICATION_FORM' => 'Company',
+    'LABEL_FOR_NAME_APPLICATION_FORM' => 'Name',
+    'LABEL_FOR_MODULES_APPLICATION_FORM' => 'Modules',
+    'TITLE_EDIT_APPLICATION_PAGE' => 'Edit App',
+    'MESSAGE_SUCCESS_DELETE_COMPANY' => 'App Deleted'
 ];

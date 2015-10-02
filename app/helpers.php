@@ -24,7 +24,7 @@ function getActiveModules(){
 
 function insertUpdateMultiLanguage($element, $newValues){
     foreach($newValues as $key => $value){
-        if(strpos($key, '_') === false){
+        if(strpos($key, '_') !== 0){
             if(is_array($value)){
                 foreach($value as $lang => $val){
                     $element->translateOrNew($lang)->$key = $val;
