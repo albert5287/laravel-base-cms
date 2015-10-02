@@ -12,7 +12,7 @@ class CreateModulesAppTable extends Migration
      */
     public function up()
     {
-        Schema::create('modules_app', function(Blueprint $table)
+        Schema::create('module_applications', function(Blueprint $table)
         {
             $table->increments('id');
 
@@ -22,16 +22,16 @@ class CreateModulesAppTable extends Migration
             $table->timestamps();
         });
 
-        Schema::create('modules_app_translations', function(Blueprint $table)
+        Schema::create('module_application_translations', function(Blueprint $table)
         {
             $table->increments('id');
-            $table->integer('modules_app_id')->unsigned();
+            $table->integer('module_application_id')->unsigned();
             $table->string('locale')->index();
 
-            $table->string('title');
+            $table->string('name');
 
-            $table->unique(['modules_app_id','locale']);
-            $table->foreign('modules_app_id')->references('id')->on('modules_app')->onDelete('cascade');
+            $table->unique(['module_application_id','locale']);
+            $table->foreign('module_application_id')->references('id')->on('module_applications')->onDelete('cascade');
         });
     }
 
@@ -42,7 +42,7 @@ class CreateModulesAppTable extends Migration
      */
     public function down()
     {
-        Schema::drop('modules_app_translations');
-        Schema::drop('modules_app');
+        Schema::drop('module_application_translations');
+        Schema::drop('module_applications');
     }
 }
