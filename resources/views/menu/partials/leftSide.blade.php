@@ -10,41 +10,25 @@
             </div>
             <div class="box-body">
                 <div class="margin-10">
-                    <input type="text" id="search-item-menu" class="search-element form-control" type="menu"
+                    <input type="text" id="search-item-section" class="search-element form-control" elementType="section"
                            placeholder="buscar">
                 </div>
                 <ul class="nav nav-pills nav-stacked">
                     <li>
-                        <ul class="menu-items">
+                        <ul id="list-section-items" class="menu-items">
+                            @foreach([1,2,3,4] as $index => $element)
                             <li>
                                 <label class="menu-item-title">
-                                    <input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1010">
-                                    Team 1
+                                    <input type="checkbox" class="menu-item-checkbox" data-id="{{$element}}" data-name="Section {{$element}}" data-type="{{MENU_ELEMENT_TYPE_SECTION}}">
+                                    Section {{$element}}
                                 </label>
                             </li>
-                            <li>
-                                <label class="menu-item-title">
-                                    <input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1010">
-                                    Team 2
-                                </label>
-                            </li>
-                            <li>
-                                <label class="menu-item-title">
-                                    <input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1010">
-                                    Team 3
-                                </label>
-                            </li>
-                            <li>
-                                <label class="menu-item-title">
-                                    <input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1010">
-                                    Team 4
-                                </label>
-                            </li>
+                            @endforeach
                         </ul>
                     </li>
                     <li>
                         <a href="#" class="pull-left">create new</a>
-                        <input class="btn btn-primary pull-right margin-3 add-menu" id="add-menu-section" type="submit" value="Add to Menu">
+                        <input class="btn btn-primary pull-right margin-3 add-menu" id="add-section-item" type="submit" value="Add to Menu">
                     </li>
                 </ul>
             </div>
@@ -60,40 +44,24 @@
             </div>
             <div class="box-body">
                 <div class="margin-10">
-                    <input type="text" id="search-item-menu" class="search-element form-control" type="menu"
+                    <input type="text" id="search-item-module" class="search-element form-control" elementType="module"
                            placeholder="buscar">
                 </div>
                 <ul class="nav nav-pills nav-stacked">
                     <li>
-                        <ul class="menu-items">
-                            <li>
-                                <label class="menu-item-title">
-                                    <input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1010">
-                                    Team 1
-                                </label>
-                            </li>
-                            <li>
-                                <label class="menu-item-title">
-                                    <input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1010">
-                                    Team 2
-                                </label>
-                            </li>
-                            <li>
-                                <label class="menu-item-title">
-                                    <input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1010">
-                                    Team 3
-                                </label>
-                            </li>
-                            <li>
-                                <label class="menu-item-title">
-                                    <input type="checkbox" class="menu-item-checkbox" name="menu-item[-1][menu-item-object-id]" value="1010">
-                                    Team 4
-                                </label>
-                            </li>
+                        <ul id="list-module-items" class="menu-items">
+                            @foreach([1,2,3,4] as $index => $element)
+                                <li>
+                                    <label class="menu-item-title">
+                                        <input type="checkbox" class="menu-item-checkbox" data-id="{{$element}}" data-name="module {{$element}}" data-type="{{MENU_ELEMENT_TYPE_MODULE}}">
+                                        Module {{$element}}
+                                    </label>
+                                </li>
+                            @endforeach
                         </ul>
                     </li>
                     <li>
-                        <input class="btn btn-primary pull-right margin-3 add-menu" type="submit" id="add-menu-module" value="Add to Menu">
+                        <input class="btn btn-primary pull-right margin-3 add-menu" type="submit" id="add-module-item" value="Add to Menu">
                     </li>
                 </ul>
             </div>

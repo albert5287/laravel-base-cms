@@ -7,7 +7,7 @@
                     {!! Form::text('name', null, ['class' => 'form-control', 'placeholder' => trans('strings.LABEL_FOR_MENU_NAME')]) !!}
                 </div>
             </div>
-            {!! Form::submit(trans('strings.LABEL_FOR_SAVE_MENU_BTN'), ['class' => 'btn btn-primary pull-right']) !!}
+            {!! Form::submit(trans('strings.LABEL_FOR_SAVE_MENU_BTN'), ['class' => 'btn btn-primary pull-right', 'id' => 'btn-save-menu']) !!}
                     <!-- /.box-tools -->
         </div>
         <div class="box-body">
@@ -15,7 +15,7 @@
         </div>
         <div class="box-footer">
             <div class="box-tools">
-                {!! Form::submit(trans('strings.LABEL_FOR_CREATE_MENU_BTN'), ['class' => 'btn btn-primary pull-right']) !!}
+                {{--{!! Form::submit(trans('strings.LABEL_FOR_CREATE_MENU_BTN'), ['class' => 'btn btn-primary pull-right']) !!}--}}
             </div>
         </div>
     </div>

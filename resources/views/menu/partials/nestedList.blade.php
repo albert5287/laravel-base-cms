@@ -1,20 +1,24 @@
-<ol class="sortable">
-    <li id="list_1"><div><span class="disclose"><span></span></span>Item 1</div>
-        <ol>
-            <li id="list_2"><div><span class="disclose"><span></span></span>Sub Item 1.1</div>
-                <ol>
-                    <li id="list_3"><div><span class="disclose"><span></span></span>Sub Item 1.2</div>
-                </ol>
-        </ol>
-    <li id="list_4"><div><span class="disclose"><span></span></span>Item 2</div>
-    <li id="list_5"><div><span class="disclose"><span></span></span>Item 3</div>
-        <ol>
-            <li id="list_6" class="mjs-nestedSortable-no-nesting"><div><span class="disclose"><span></span></span>Sub Item 3.1 (no nesting)</div>
-            <li id="list_7"><div><span class="disclose"><span></span></span>Sub Item 3.2</div>
-                <ol>
-                    <li id="list_8"><div><span class="disclose"><span></span></span>Sub Item 3.2.1</div>
-                </ol>
-        </ol>
-    <li id="list_9"><div><span class="disclose"><span></span></span>Item 4</div>
-    <li id="list_10"><div><span class="disclose"><span></span></span>Item 5</div>
-</ol>
+<div class="dd" id="nestable3">
+    <ol class="dd-list father">
+        {{--<li class="dd-item dd3-item" data-id="13">
+            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 13</div>
+        </li>
+        <li class="dd-item dd3-item" data-id="14">
+            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 14</div>
+        </li>
+        <li class="dd-item dd3-item" data-id="15">
+            <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 15</div>
+            <ol class="dd-list">
+                <li class="dd-item dd3-item" data-id="16">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 16</div>
+                </li>
+                <li class="dd-item dd3-item" data-id="17">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 17</div>
+                </li>
+                <li class="dd-item dd3-item dd-no-nestable" data-id="18">
+                    <div class="dd-handle dd3-handle">Drag</div><div class="dd3-content">Item 18</div>
+                </li>
+            </ol>
+        </li>--}}
+    </ol>
+</div>
