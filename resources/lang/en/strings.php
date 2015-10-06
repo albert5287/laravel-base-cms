@@ -67,4 +67,11 @@ return [
     'TITLE_EDIT_MODULES_APPLICATION_PAGE' => 'Edit Module',
     'MESSAGE_SUCCESS_EDIT_APPLICATION_MODULE' => 'Module Edited',
     'MESSAGE_SUCCESS_DELETE_APPLICATION_MODULE' => 'Module Deleted',
+    //String for module Menu
+    'LABEL_FOR_SELECT_A_MENU_TO_EDIT' => 'Select a menu to edit',
+    'LABEL_FOR_MENU_NAME' => 'Menu Name',
+    'LABEL_FOR_CREATE_MENU_BTN' => 'Create Menu',
+    'LABEL_FOR_SAVE_MENU_BTN' => 'Save Menu',
+    'LABEL_FOR_SECTIONS_MENU' => 'Sections',
+    'LABEL_FOR_CONTENT_MODULE_MENU' => 'Content Modules'
 ];

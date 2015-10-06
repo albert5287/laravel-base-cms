@@ -16,6 +16,7 @@ class CreateMenusTable extends Migration
             $table->increments('id')->unsigned();
             $table->string('name');
             $table->integer('application_id')->unsigned()->index();
+            $table->boolean('enabled')->default(true);
             $table->timestamps();
 
             $table->foreign('application_id')->references('id')->on('applications')->onDelete('cascade');

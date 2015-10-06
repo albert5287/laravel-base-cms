@@ -14,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Html::macro('isActive', function($url) {
-            return Request::is($url.'*') ? 'active' : '';
+            return Request::is($url) || Request::is($url.'/*') ? 'active' : '';
         });
     }
 

@@ -16,13 +16,17 @@ elixir(function(mix) {
         'admin/skins/skin-blue.less'
     ], 'resources/assets/css')
         .styles([
-        'app.css',
-        'vendor/bootstrap.css'
+            'app.css',
+            'styles.css',
+            'vendor/bootstrap.css',
+            'vendor/nestedSortable.css'
     ]).version('css/all.css');
 
     mix.scripts([
         'libs/jQuery-2.1.3.min.js',
         'libs/bootstrap.min.js',
+        'libs/jquery-ui.min.js',
+        'libs/nestedSortable.js',
         'app.js',
     ], 'public/js/all.js');
 });

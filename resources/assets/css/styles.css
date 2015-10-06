@@ -1,0 +1,16 @@
+.add-new-menu-action{
+    margin-left: 10px;
+}
+.margin-10{
+    margin: 10px;
+}
+.margin-3{
+    margin-top: 5px;
+}
+.menu-items{
+    max-height: 200px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    list-style: none;
+    padding-left: 25px;
+}
