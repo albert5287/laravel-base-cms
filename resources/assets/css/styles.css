@@ -14,3 +14,41 @@
     list-style: none;
     padding-left: 25px;
 }
+
+.modal-lg-xl{
+    width: 90% !important;
+}
+
+.modal-lg-xl .modal-content {
+    overflow-y: auto;
+}
+
+.modal-lg-xl .modal-content .tab-content {
+    min-height: 250px;
+}
+
+/*styles for the dropzone*/
+#dropzoneFileUpload{
+    min-height: 250px;
+}
+
+.dropzone-previews input[type=checkbox] {
+    opacity: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+#previews input[type=checkbox]:checked + .dz-image{
+    border: 2px solid #3c8dbc;
+    opacity: 0.6;
+}
+#previews input[type=checkbox]:checked:focus + .dz-image{
+   border: 6px solid #3c8dbc;
+}
+
+#previews input[type=checkbox]:checked + .dz-image + .dz-details + .dz-success-mark {
+    opacity: 1;
+}
+/*end styles for the dropzone*/
+

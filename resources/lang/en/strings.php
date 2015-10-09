@@ -16,6 +16,13 @@ return [
     'NO' => 'No',
     'CREATE_SUBMIT_BUTTON_TEXT' => 'Save',
     'EDIT_SUBMIT_BUTTON_TEXT' => 'Edit',
+    'LABEL_FOR_TITLE' => 'Title',
+    'LABEL_FOR_SUBTITLE' => 'Subtitle',
+    'LABEL_FOR_TEXT' => 'Text',
+    'LABEL_FOR_ADD_MULTIMEDIA' => 'Add Multimedia',
+    'LABEL_INSERT_MEDIA' => 'Insert Media',
+    'LABEL_UPLOAD_FILE' => 'Upload Files',
+    'LABEL_MEDIA_LIBRARY' => 'Media Library',
     //strings for module Languages
     'TITLE_EDIT_LANGUAGE_PAGE' => 'Edit Language',
     'MESSAGE_SUCCESS_EDIT_LANGUAGE' => 'Language Updated',
@@ -73,5 +80,6 @@ return [
     'LABEL_FOR_CREATE_MENU_BTN' => 'Create Menu',
     'LABEL_FOR_SAVE_MENU_BTN' => 'Save Menu',
     'LABEL_FOR_SECTIONS_MENU' => 'Sections',
-    'LABEL_FOR_CONTENT_MODULE_MENU' => 'Content Modules'
+    'LABEL_FOR_CONTENT_MODULE_MENU' => 'Content Modules',
+    'INSERT_MEDIA' => 'Insert Media'
 ];

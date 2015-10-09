@@ -144,6 +144,7 @@ return [
         Dimsav\Translatable\TranslatableServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
 
     ],
     /*
@@ -196,6 +197,7 @@ return [
         'Debugbar' => 'Barryvdh\Debugbar\Facade',
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
         'Flash'     => 'Laracasts\Flash\Flash',
+        'Image' => 'Intervention\Image\Facades\Image',
     ],
 
 ];
