@@ -3,6 +3,10 @@
     var destinationDiv = 'related-media';
 
     $('#media-modal').on('show.bs.modal', function (event) {
+        //remove disabled attribute
+        $('#previews input[type=checkbox]').prop('disabled', false);
+        //I uncheck the elements from the modal
+        $('#previews input[type=checkbox]').removeAttr('checked');
         var button = $(event.relatedTarget) // Button that triggered the modal
         if(button.data('limit-elements') !== 'undefined'){
             limitElements = button.data('limit-elements');
@@ -72,11 +76,14 @@
     function insertMediaForm(){
         var selectedMedia = $('#previews input[type=checkbox]:checked').closest('.dz-image-preview');
         selectedMedia.each(function(){
-            //I clone the element and put it in the form
-            $(this).clone().appendTo('#'+destinationDiv);
+            //get the source of the image
+            var srcImage = $(this).find('img')[0].src;
+            //if that image is not in the destination div the i put it
+            if($('#'+destinationDiv +' img[src$="'+srcImage+'"]').length === 0) {
+                //I clone the element and put it in the form
+                $(this).clone().appendTo('#' + destinationDiv);
+            }
         });
-        //I uncheck the elements from the modal
-        $('#previews input[type=checkbox]').removeAttr('checked');
         //workaround to set to readonly the checkboxes on the form
         $('#related-media input[type=checkbox]').on('click', function(){
             return false;
