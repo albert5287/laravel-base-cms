@@ -1,20 +1,9 @@
 <script>
     var limitElements = -1;
     var destinationDiv = 'related-media';
+    var destinationName = 'relatedMedia[]';
 
-    $('#media-modal').on('show.bs.modal', function (event) {
-        //remove disabled attribute
-        $('#previews input[type=checkbox]').prop('disabled', false);
-        //I uncheck the elements from the modal
-        $('#previews input[type=checkbox]').removeAttr('checked');
-        var button = $(event.relatedTarget) // Button that triggered the modal
-        if(button.data('limit-elements') !== 'undefined'){
-            limitElements = button.data('limit-elements');
-        }
-        if(button.data('destination-div') !== 'undefined'){
-            destinationDiv = button.data('destination-div');
-        }
-    });
+    $('#media-modal').on('show.bs.modal', openModal);
 
     $('#media-modal').on('change', '#previews input[type=checkbox]', limitSelectMedia);
 
@@ -73,7 +62,27 @@
 
     $('#insert_media_form').on('click', insertMediaForm);
 
+
+    //function triggered when the modal is opened
+    function openModal(event){
+        //I uncheck the elements from the modal
+        $('#previews input[type=checkbox]').removeAttr('checked');
+        //get the data from the button
+        var button = $(event.relatedTarget) // Button that triggered the modal
+
+        limitElements = getButtonData(button, 'limit-elements');
+        destinationDiv = getButtonData(button, 'destination-div');
+        destinationName = getButtonData(button, 'destination-name');
+
+        //if limitElements is bigger than 1 and i already have reached the limit i can't select more items
+        if(limitElements > 1 && $('#' + destinationDiv + ' .dz-preview').length >= limitElements){
+            //remove disabled attribute
+            $('#previews input[type=checkbox]').prop('disabled', true);
+        }
+    }
+    //function to put the selected media into the form
     function insertMediaForm(){
+        //i get the selected images
         var selectedMedia = $('#previews input[type=checkbox]:checked').closest('.dz-image-preview');
         selectedMedia.each(function(){
             //get the source of the image
@@ -81,7 +90,9 @@
             //if that image is not in the destination div the i put it
             if($('#'+destinationDiv +' img[src$="'+srcImage+'"]').length === 0) {
                 //I clone the element and put it in the form
-                $(this).clone().appendTo('#' + destinationDiv);
+                var newElement = $(this).clone().appendTo('#' + destinationDiv);
+                //I change the name attr
+                newElement.find('input[type=checkbox]').attr('name', destinationName);
             }
         });
         //workaround to set to readonly the checkboxes on the form
@@ -92,11 +103,32 @@
         $('#media-modal').modal('hide');
     }
 
+    //function to limit the media that can be selected
     function limitSelectMedia(){
         if(limitElements > 0){
             var checkboxes = $('#previews input[type=checkbox]');
             var current = checkboxes.filter(':checked').length;
-            checkboxes.filter(':not(:checked)').prop('disabled', current >= limitElements);
+            if(limitElements === 1){
+                checkboxes.filter(':not(:checked)').prop('disabled', current >= limitElements);
+            }
+            else{
+                var mediaAlreadySelected = $('#' + destinationDiv + ' .dz-preview').length;
+                checkboxes.filter(':not(:checked)').prop('disabled', (current + mediaAlreadySelected) >= limitElements);
+            }
+
+
+        }
+    }
+
+    //function to get the data from the button
+    function getButtonData(button, attr){
+        //if the data is set is returned
+        if(button.data(attr) !== undefined) {
+            return button.data(attr)
+        }
+        //otherwise return the default value
+        else{
+            return window[$.camelCase(attr)];
         }
     }
 
