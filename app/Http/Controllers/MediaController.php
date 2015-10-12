@@ -21,7 +21,7 @@ class MediaController extends Controller
         //dd($data);
         $uploadedFiles = [];
         if(isset($data['file']) && sizeof($data['file']) > 0){
-            //$uploadedFiles = Media::uploadAndSaveFiles($data['file']);
+            $uploadedFiles = Media::uploadAndSaveFiles($data['file']);
         }
         return $uploadedFiles;
 

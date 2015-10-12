@@ -42,7 +42,7 @@
                                         @foreach($multimedia->allByApp()->get() as $media)
                                             <div class="dz-preview dz-image-preview">
                                                 <label>
-                                                <input type="checkbox" name="mediaSelected[]" value="{{$media}}">
+                                                <input type="checkbox" name="mediaSelected[]" value="{{$media->id}}">
                                                 <div class="dz-image">
                                                     <img src="{{ asset('/'.$media->getThumbnail()) }}" width="120px"
                                                          height="120px" alt="{{$media->title}}">

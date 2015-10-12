@@ -12,7 +12,7 @@ class CreateMediablesTable extends Migration
      */
     public function up()
     {
-        Schema::create('mediable', function(Blueprint $table)
+        Schema::create('mediables', function(Blueprint $table)
         {
             $table->increments('id');
             $table->integer('media_id')->unsigned()->index();
@@ -27,6 +27,6 @@ class CreateMediablesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('mediable');
+        Schema::drop('mediables');
     }
 }

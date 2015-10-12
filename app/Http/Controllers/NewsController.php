@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\NewsRequest;
 use App\Media;
 use App\Module;
+use App\News;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -64,12 +65,28 @@ class NewsController extends BaseController
      */
     public function store(NewsRequest $request)
     {
-        dd($request->all());
+        $data = $request->all();
         $new = new News();
-        insertUpdateMultiLanguage($new, $request->all());
+        $new->module_application_id = 1; //TODO: get this dinamically
+        insertUpdateMultiLanguage($new, $data);
+        $new->syncMedia($data['_relatedMedia']);
 
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
 
-        return redirect('modules');
+        return redirect('news');
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param News $new
+     * @return Response
+     */
+    public function edit(News $new)
+    {
+        $this->setReturnUrl();
+
+        $page_title = trans('strings.TITLE_EDIT_MODULE_PAGE');
+        return view('news.edit', compact('new', 'page_title'));
     }
 }

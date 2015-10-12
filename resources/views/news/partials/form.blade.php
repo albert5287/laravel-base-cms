@@ -31,16 +31,15 @@
                                                                                 'data-target' => '#media-modal',
                                                                                 'data-limit-elements' => 2,
                                                                                 'data-destination-div' => 'related-media',
-                                                                                'data-destination-name' => 'relatedMedia[]',)) !!}
+                                                                                'data-destination-name' => '_relatedMedia[]',)) !!}
                 </div>
                 <div id="related-media" class="dropzone dropzone-previews">
-
+                    {{$new->media}}
                 </div>
             </div>
             <!-- /.tab-content -->
         </div>
         <!-- nav-tabs-custom -->
-        @include('partials.media.modal')
     </div>
     <!-- /.box-body -->
     <div class="box-footer">
@@ -48,6 +47,7 @@
         {!! Form::submit($submitButtonText, ['class' => 'btn btn-primary']) !!}
     </div>
 </div><!-- /.box -->
+@include('partials.media.modal')
 
 @section('scripts')
     @include('partials.scripts.ckEditor')

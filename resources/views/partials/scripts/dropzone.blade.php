@@ -1,14 +1,8 @@
 <script>
     var limitElements = -1;
     var destinationDiv = 'related-media';
-    var destinationName = 'relatedMedia[]';
+    var destinationName = '_relatedMedia[]';
     var showRemoveLink = true;
-
-    //listener when the modal is opened
-    $('#media-modal').on('show.bs.modal', openModal);
-
-    //listener to limit the selected media
-    $('#media-modal').on('change', '#previews input[type=checkbox]', limitSelectMedia);
 
     Dropzone.autoDiscover = false;
     var myDropzone = new Dropzone("div#dropzoneFileUpload", {
@@ -41,10 +35,12 @@
             // Gets triggered when the files have successfully been sent.
             // Redirect user or notify of success.
             this.on("successmultiple", function(files, response) {
+                console.log(response);
                 //foreach file a add the checkbox
                 $.each(files, function(index, value){
+                    var id = response[index].id;
                     var element = $(value.previewElement);
-                    var checkbox = '<input type="checkbox" name="mediaSelected[]" value="">';
+                    var checkbox = '<input type="checkbox" name="mediaSelected[]" value="'+id+'">';
                     element.html('<label>'+checkbox+element.html()+'</label>');
                     element.removeClass('dz-success');
                 });
@@ -63,6 +59,15 @@
         }
     });
 
+    //listener when the modal is opened
+    $('#media-modal').on('show.bs.modal', openModal);
+
+    //listener when the modal is closed
+    $('#media-modal').on('hide.bs.modal', closeModal);
+
+    //listener to limit the selected media
+    $('#media-modal').on('change', '#previews input[type=checkbox]', limitSelectMedia);
+
     //listener to add the selected media in the form
     $('#insert_media_form').on('click', insertMediaForm);
 
@@ -71,8 +76,6 @@
 
     //function triggered when the modal is opened
     function openModal(event){
-        //I uncheck the elements from the modal
-        $('#previews input[type=checkbox]').removeAttr('checked');
         //get the data from the button
         var button = $(event.relatedTarget) // Button that triggered the modal
 
@@ -86,6 +89,12 @@
             //remove disabled attribute
             $('#previews input[type=checkbox]').prop('disabled', true);
         }
+    }
+
+    //function triggered when the modal is closed
+    function closeModal(){
+        //I uncheck the elements from the modal
+        $('#previews input[type=checkbox]').removeAttr('checked');
     }
 
     //function to put the selected media into the form

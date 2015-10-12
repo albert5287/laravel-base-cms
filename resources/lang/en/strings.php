@@ -81,5 +81,7 @@ return [
     'LABEL_FOR_SAVE_MENU_BTN' => 'Save Menu',
     'LABEL_FOR_SECTIONS_MENU' => 'Sections',
     'LABEL_FOR_CONTENT_MODULE_MENU' => 'Content Modules',
-    'INSERT_MEDIA' => 'Insert Media'
+    'INSERT_MEDIA' => 'Insert Media',
+    //String for News Module
+    'MESSAGE_SUCCESS_CREATE_NEWS' => 'New Created'
 ];
