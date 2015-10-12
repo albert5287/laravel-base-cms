@@ -65,11 +65,9 @@ class NewsController extends BaseController
      */
     public function store(NewsRequest $request)
     {
-        $data = $request->all();
+
         $new = new News();
-        $new->module_application_id = 1; //TODO: get this dinamically
-        insertUpdateMultiLanguage($new, $data);
-        $new->syncMedia($data['_relatedMedia']);
+        $this->insertUpdateNew($new, $request);
 
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
 
@@ -86,7 +84,35 @@ class NewsController extends BaseController
     {
         $this->setReturnUrl();
 
-        $page_title = trans('strings.TITLE_EDIT_MODULE_PAGE');
+        $page_title = trans('strings.TITLE_EDIT_NEWS_PAGE');
         return view('news.edit', compact('new', 'page_title'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  News $new
+     * @param NewsRequest $request
+     * @return Response
+     */
+    public function update(News $new, NewsRequest $request)
+    {
+        $this->insertUpdateNew($new, $request);
+
+        flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_LANGUAGE'));
+
+        return $this->redirectPreviousUrl('modules');
+    }
+
+    /**
+     * function to insert or update a new news
+     * @param News $new
+     * @param NewsRequest $request
+     */
+    private function insertUpdateNew(News $new, NewsRequest $request){
+        $data = $request->all();
+        $new->module_application_id = 1; //TODO: get this dinamically
+        insertUpdateMultiLanguage($new, $data);
+        $new->syncMedia($data['_relatedMedia']);
     }
 }

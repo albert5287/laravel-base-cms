@@ -34,7 +34,9 @@
                                                                                 'data-destination-name' => '_relatedMedia[]',)) !!}
                 </div>
                 <div id="related-media" class="dropzone dropzone-previews">
-                    {{$new->media}}
+                    @foreach($new->media as $media)
+                        @include('partials.media.previewImage', ['inputName' => '_relatedMedia[]', 'checkboxChecked' => true,  'showRemoveLink' => true])
+                    @endforeach
                 </div>
             </div>
             <!-- /.tab-content -->
