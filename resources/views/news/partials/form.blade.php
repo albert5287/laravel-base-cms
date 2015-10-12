@@ -31,7 +31,7 @@
                                                                                 'data-target' => '#media-modal',
                                                                                 'data-limit-elements' => 2,
                                                                                 'data-destination-div' => 'related-media',
-                                                                                'data-destination-name' => 'relatedMedia[]')) !!}
+                                                                                'data-destination-name' => 'relatedMedia[]',)) !!}
                 </div>
                 <div id="related-media" class="dropzone dropzone-previews">
 
