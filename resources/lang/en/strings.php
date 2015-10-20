@@ -43,6 +43,9 @@ return [
     'LABEL_FOR_ENABLED_MODULE_FORM' => 'Enabled',
     'LABEL_FOR_TITLE_MODULE_FORM' => 'Title',
     'TITLE_EDIT_MODULE_PAGE' => 'Edit Module',
+    'LABEL_FOR_SHOW_SIDEBAR_MODULE_FORM' => 'Show in sidebar',
+    'LABEL_FOR_IS_CONTENT_MODULE_MODULE_FORM' => 'Is a content module',
+    'LABEL_FOR_ONLY_SUPER_ADMIN_MODULE_FORM' => 'Only super admin',
     //String for module Company
     'HEADER_TABLE_FOR_NAME_IN_COMPANIES' => 'Name',
     'HEADER_TABLE_FOR_EMAIL_IN_COMPANIES' => 'Email',

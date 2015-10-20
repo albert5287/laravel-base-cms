@@ -62,10 +62,21 @@ Route::post('password/reset', [
 
 Route::get('change-current-app/{appId}', 'HomeController@changeCurrentApp');
 
-Route::get('news/{module_application_id}', 'NewsController@index');
+//Route::get('news/{module_application_id}', 'NewsController@index');
 
 //create routes for the active modules
-foreach(getActiveModules() as $module){
-    Route::resource($module->name, $module->class.'Controller');
+foreach(getAllActiveModules() as $module){
+    if($module->is_content_module){
+        Route::post($module->name, $module->class.'Controller@store');
+        Route::get($module->name.'/{module_application_id}', $module->class.'Controller@index'); //list of a content module
+        Route::get($module->name.'/create/{module_application_id}', $module->class.'Controller@create');
+        Route::get($module->name.'/{'.$module->name.'}/edit/{module_application_id}', $module->class.'Controller@edit');
+        Route::delete($module->name.'/{'.$module->name.'}', $module->class.'Controller@destroy');
+        Route::put($module->name.'/{'.$module->name.'}', $module->class.'Controller@update');
+    }
+    else{
+        Route::resource($module->name, $module->class.'Controller');
+    }
+
 }
 Route::get('content', 'ContentController@index');

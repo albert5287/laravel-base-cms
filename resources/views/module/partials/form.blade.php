@@ -30,6 +30,21 @@
                     <span>{{trans('strings.YES')}}: </span> {!! Form::radio('enabled', true, true) !!}
                     <span>{{trans('strings.NO')}}: </span> {!! Form::radio('enabled', false) !!}
                 </div>
+                <div class="form-group">
+                    {!! Form::label('enabled', trans('strings.LABEL_FOR_SHOW_SIDEBAR_MODULE_FORM').':') !!}
+                    <span>{{trans('strings.YES')}}: </span> {!! Form::radio('show_sidebar', true, true) !!}
+                    <span>{{trans('strings.NO')}}: </span> {!! Form::radio('show_sidebar', false) !!}
+                </div>
+                <div class="form-group">
+                    {!! Form::label('enabled', trans('strings.LABEL_FOR_IS_CONTENT_MODULE_MODULE_FORM').':') !!}
+                    <span>{{trans('strings.YES')}}: </span> {!! Form::radio('is_content_module', true, true) !!}
+                    <span>{{trans('strings.NO')}}: </span> {!! Form::radio('is_content_module', false) !!}
+                </div>
+                <div class="form-group">
+                    {!! Form::label('enabled', trans('strings.LABEL_FOR_ONLY_SUPER_ADMIN_MODULE_FORM').':') !!}
+                    <span>{{trans('strings.YES')}}: </span> {!! Form::radio('only_super_admin', true) !!}
+                    <span>{{trans('strings.NO')}}: </span> {!! Form::radio('only_super_admin', false, true) !!}
+                </div>
             </div>
             <!-- /.tab-content -->
         </div>

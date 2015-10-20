@@ -22,5 +22,5 @@ class Module extends Model
      *
      * @var array
      */
-    public $fillable = ['class' ,'name', 'enabled', 'title'];
+    public $fillable = ['class' ,'name', 'enabled', 'show_sidebar', 'is_content_module', 'only_super_admin'];
 }

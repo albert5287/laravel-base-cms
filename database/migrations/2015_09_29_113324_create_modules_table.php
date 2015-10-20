@@ -17,6 +17,9 @@ class CreateModulesTable extends Migration
             $table->string('class');
             $table->string('name');
             $table->boolean('enabled')->default(true);
+            $table->boolean('show_sidebar')->default(true);
+            $table->boolean('is_content_module')->default(true);
+            $table->boolean('only_super_admin')->default(true);
             $table->timestamps();
         });
 

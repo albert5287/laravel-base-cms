@@ -4,6 +4,7 @@ use App\Language;
 use App\Module;
 use App\ModuleApplication;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Created by PhpStorm.
@@ -21,8 +22,20 @@ function getActiveLanguages(){
 //TODO
 //filter by active Modules
 //maybe change to the model
-function getActiveModules(){
-    return Module::withTranslation()->get();
+/**
+ * @return mixed
+ */
+function getAvailableModulesForAUser($user){
+    $modules = Module::where('enabled', '=', true)
+        ->where('show_sidebar', '=', true);
+    if(!($user->is('super.admin'))){
+        $modules->where('only_super_admin', '=', false);
+    }
+    return $modules->withTranslation()->get();
+}
+
+function getAllActiveModules(){
+    return Module::where('enabled', '=', true)->withTranslation()->get();
 }
 
 //TODO: maybe change this to a base model and extend that model

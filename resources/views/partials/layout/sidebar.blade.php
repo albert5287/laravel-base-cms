@@ -7,7 +7,7 @@
         <!-- Sidebar Menu -->
         <ul class="sidebar-menu">
             <!-- Optionally, you can add icons to the links -->
-            @foreach(getActiveModules() as $module)
+            @foreach(getAvailableModulesForAUser(Auth::user()) as $module)
                 <li class="{{HTML::isActive($module->name)}}"><a href="{{action($module->class.'Controller@index')}}"><span>{{$module->title}}</span></a> </li>
             @endforeach
             {{--<li class="{{HTML::isActive('home')}}"><a href="{{action('HomeController@index')}}"><span>Home</span></a> </li>

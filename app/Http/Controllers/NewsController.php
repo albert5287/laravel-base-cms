@@ -50,6 +50,7 @@ class NewsController extends BaseController
                 $module_application_id
             ]
         ] : null;
+
         return $this->setupContentModuleIndex($page_title, $class_name, $header_table, $aditionalQueryCondtitions);
     }
 
