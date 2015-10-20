@@ -8,6 +8,7 @@ use App\ModuleApplication;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 class ModuleApplicationController extends BaseController
 {
@@ -37,7 +38,9 @@ class ModuleApplicationController extends BaseController
         $header_table = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_MODULES_APPLICATION'),
             'moduleType' => trans('strings.HEADER_TABLE_FOR_MODULE_TYPE_IN_MODULES_APPLICATION')];
 
-        return $this->setupIndexTable($page_title, $class_name, $header_table);
+        $adittionalQueryConditions = Session::has('currentApp') ?
+                                    ['where' => ['application_id', '=', Session::get('currentApp')->id]] : NULL;
+        return $this->setupIndexTable($page_title, $class_name, $header_table, $adittionalQueryConditions);
     }
 
     /**

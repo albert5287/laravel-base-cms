@@ -52,3 +52,36 @@
 }
 /*end styles for the dropzone*/
 
+
+.btn-user-switch, .btn-user-switch > a {
+    padding: 15px;
+    line-height: 20px;
+}
+
+.btn-user-switch > a:hover,
+.btn-user-switch > a:focus {
+    padding: 15px;
+    text-decoration: none;
+    background: rgba(0, 0, 0, 0.1);
+    color: #f6f6f6;
+}
+
+.btn-user-switch a{
+    color: #ffffff;
+}
+
+.no-padding-right{
+    padding-right: 0 !important;
+}
+
+.btn-user-switch .dropdown-menu {
+    position: absolute;
+    right: 15px;
+    left: auto;
+}
+
+.navbar-nav > .messages-menu > .dropdown-menu > li .menu > li > a > h4 {
+    margin: 0 0 0 5px !important;
+}
+
+

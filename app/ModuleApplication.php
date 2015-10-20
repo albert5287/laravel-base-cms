@@ -25,12 +25,24 @@ class ModuleApplication extends Model
      */
     public $fillable = ['module_id'];
 
+    /**
+     * The relations to eager load on every query.
+     *
+     * @var array
+     */
+    // (optionaly)
+     protected $with = ['module'];
+
     public function module(){
         return $this->belongsTo('App\Module');
     }
 
     public function getModuleTypeAttribute(){
         return $this->module->name;
+    }
+
+    public function scopeGetModulesApp($query, $appId){
+        return $query->where('application_id', '=', $appId);
     }
 
 }

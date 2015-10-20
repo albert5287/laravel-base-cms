@@ -9,6 +9,7 @@ use App\Module;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
 class ApplicationController extends BaseController
 {
@@ -28,7 +29,6 @@ class ApplicationController extends BaseController
      */
     public function index()
     {
-
         $class_name = 'Application';
 
         $module = Module::where('class', $class_name)->first();
@@ -70,6 +70,8 @@ class ApplicationController extends BaseController
 
         $this->insertUpdateAvailableModules($application, $request->input('_modules'));
 
+        Session::forget('availableApps');
+
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_COMPANY'));
 
         return redirect('apps');
@@ -95,15 +97,21 @@ class ApplicationController extends BaseController
     /**
      * Update the specified resource in storage.
      *
-     * @param  Company $company
-     * @param CompanyRequest $request
+     * @param  Application $application
+     * @param ApplicationRequest $request
      * @return Response
      */
-    public function update(Company $company, CompanyRequest $request)
+    public function update(Application $application, ApplicationRequest $request)
     {
-        insertUpdateMultiLanguage($company, $request->all());
+        insertUpdateMultiLanguage($application, $request->all());
 
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_COMPANY'));
+
+        Session::forget('availableApps');
+
+        if(Session::has('currentApp') && Session::get('currentApp')->isEqual($application)){
+            Session::put('currentApp', $application);
+        }
 
         return $this->redirectPreviousUrl('companies');
     }
@@ -119,6 +127,8 @@ class ApplicationController extends BaseController
         $this->setReturnUrl();
 
         $application->delete();
+
+        Session::forget('availableApps');
 
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_COMPANY'));
 

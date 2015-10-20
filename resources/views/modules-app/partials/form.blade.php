@@ -29,7 +29,6 @@
     </div>
     <!-- /.box-body -->
     <div class="box-footer">
-
         {!! Form::submit($submitButtonText, ['class' => 'btn btn-primary']) !!}
     </div>
 </div><!-- /.box -->

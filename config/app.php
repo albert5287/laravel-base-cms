@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'es',
+    'fallback_locale' => 'de',
     /*
     |--------------------------------------------------------------------------
     | Encryption Key

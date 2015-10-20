@@ -16,8 +16,17 @@ class CreateModulesAppTable extends Migration
         {
             $table->increments('id');
 
+            $table->integer('application_id')->unsigned()->index();
+            $table->foreign('application_id')
+                ->references('id')
+                ->on('applications')
+                ->onDelete('cascade');
+
             $table->integer('module_id')->unsigned()->index();
-            $table->foreign('module_id')->references('id')->on('modules')->onDelete('cascade');
+            $table->foreign('module_id')
+                ->references('id')
+                ->on('modules')
+                ->onDelete('cascade');
 
             $table->timestamps();
         });
@@ -31,7 +40,10 @@ class CreateModulesAppTable extends Migration
             $table->string('name');
 
             $table->unique(['module_application_id','locale']);
-            $table->foreign('module_application_id')->references('id')->on('module_applications')->onDelete('cascade');
+            $table->foreign('module_application_id')
+                ->references('id')
+                ->on('module_applications')
+                ->onDelete('cascade');
         });
     }
 

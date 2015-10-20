@@ -14,12 +14,14 @@ class NewsController extends BaseController
 {
 
     public $module_id = 1;
+
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
      */
-    public function __construct(){
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
@@ -28,19 +30,27 @@ class NewsController extends BaseController
      *
      * @return Response
      */
-    public function index()
+    public function index($module_application_id = 0)
     {
-
         $class_name = 'News';
 
         $module = Module::where('class', $class_name)->first();
 
         $page_title = $module->title;
 
-        $header_table = ['title' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
-            'subtitle' => trans('strings.HEADER_TABLE_FOR_CODE_IN_LANGUAGES')];
+        $header_table = [
+            'title' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
+            'subtitle' => trans('strings.HEADER_TABLE_FOR_CODE_IN_LANGUAGES')
+        ];
 
-        return $this->setupIndexTable($page_title, $class_name, $header_table);
+        $aditionalQueryCondtitions = $module_application_id > 0 ? [
+            'where' => [
+                'module_application_id',
+                '=',
+                $module_application_id
+            ]
+        ] : null;
+        return $this->setupContentModuleIndex($page_title, $class_name, $header_table, $aditionalQueryCondtitions);
     }
 
     /**
@@ -109,7 +119,8 @@ class NewsController extends BaseController
      * @param News $new
      * @param NewsRequest $request
      */
-    private function insertUpdateNew(News $new, NewsRequest $request){
+    private function insertUpdateNew(News $new, NewsRequest $request)
+    {
         $data = $request->all();
         $new->module_application_id = 1; //TODO: get this dinamically
         insertUpdateMultiLanguage($new, $data);

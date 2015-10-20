@@ -34,4 +34,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function applications(){
+        return $this->belongsToMany('App\Application');
+    }
+
+    public function isEqual(User $user){
+        return $this->id === $user->id;
+    }
+
 }

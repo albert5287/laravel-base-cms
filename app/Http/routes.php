@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Support\Facades\Route;
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -58,8 +60,12 @@ Route::post('password/reset', [
     'as' => 'password/postReset'
 ]);
 
+Route::get('change-current-app/{appId}', 'HomeController@changeCurrentApp');
+
+Route::get('news/{module_application_id}', 'NewsController@index');
+
 //create routes for the active modules
 foreach(getActiveModules() as $module){
     Route::resource($module->name, $module->class.'Controller');
 }
-//Route::resource('languages', 'LanguageController');
+Route::get('content', 'ContentController@index');
