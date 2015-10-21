@@ -13,7 +13,8 @@ use App\Http\Controllers\Controller;
 class NewsController extends BaseController
 {
 
-    public $module_id = 1;
+    protected $className = 'News';
+    protected $module = NULL;
 
     /**
      * Constructor.
@@ -22,6 +23,7 @@ class NewsController extends BaseController
      */
     public function __construct()
     {
+        $this->module = $this->getModule();
         $this->middleware('auth');
     }
 
@@ -30,13 +32,10 @@ class NewsController extends BaseController
      *
      * @return Response
      */
-    public function index($module_application_id = 0)
+    public function index($module_application_id)
     {
-        $class_name = 'News';
 
-        $module = Module::where('class', $class_name)->first();
-
-        $page_title = $module->title;
+        $page_title = $this->module->title;
 
         $header_table = [
             'title' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
@@ -51,7 +50,7 @@ class NewsController extends BaseController
             ]
         ] : null;
 
-        return $this->setupContentModuleIndex($page_title, $class_name, $header_table, $aditionalQueryCondtitions);
+        return $this->setupContentModuleIndex($page_title, $this->className, $header_table, $aditionalQueryCondtitions, $module_application_id);
     }
 
     /**
@@ -59,13 +58,12 @@ class NewsController extends BaseController
      *
      * @return Response
      */
-    public function create()
+    public function create($module_application_id)
     {
+        $this->setReturnUrl();
         $page_title = trans('strings.TITLE_CREATE_LANGUAGE_PAGE');
 
-        //dd(Media::AllByApp()->get());
-
-        return view('news.create', compact('page_title'));
+        return view('news.create', compact('page_title', 'module_application_id'));
     }
 
     /**
@@ -76,13 +74,12 @@ class NewsController extends BaseController
      */
     public function store(NewsRequest $request)
     {
-
         $new = new News();
         $this->insertUpdateNew($new, $request);
 
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
 
-        return redirect('news');
+        return $this->redirectPreviousUrl('news/'.$new->module_application_id);
     }
 
     /**
@@ -123,8 +120,27 @@ class NewsController extends BaseController
     private function insertUpdateNew(News $new, NewsRequest $request)
     {
         $data = $request->all();
-        $new->module_application_id = 1; //TODO: get this dinamically
         insertUpdateMultiLanguage($new, $data);
-        $new->syncMedia($data['_relatedMedia']);
+        if(isset($data['_relatedMedia'])){
+            $new->syncMedia($data['_relatedMedia']);
+        }
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  News $new
+     * @return Response
+     */
+    public function destroy(News $new)
+    {
+        $this->setReturnUrl();
+
+        $new->delete();
+
+        flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_COMPANY'));
+
+        return $this->redirectPreviousUrl('news');
     }
 }

@@ -7,5 +7,4 @@
             @include('partials.table.table')
         </div>
     </div>
-
 @stop

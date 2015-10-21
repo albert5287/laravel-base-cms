@@ -10,6 +10,7 @@
             @foreach(getAvailableModulesForAUser(Auth::user()) as $module)
                 <li class="{{HTML::isActive($module->name)}}"><a href="{{action($module->class.'Controller@index')}}"><span>{{$module->title}}</span></a> </li>
             @endforeach
+            <li class="{{HTML::isAContentModuleActive()}}"><a href="{{action('ContentController@index')}}"><span>{{trans('strings.CONTENT_MODULE_LABEL')}}</span></a> </li>
             {{--<li class="{{HTML::isActive('home')}}"><a href="{{action('HomeController@index')}}"><span>Home</span></a> </li>
             <li class="{{HTML::isActive('languages')}}"><a href="{{action('LanguageController@index')}}"><span>Languages</span></a> </li>
             <li class="{{HTML::isActive('kategorie')}}"><a href="{{action('KategorieController@index')}}"><span>Kategorie</span></a> </li>

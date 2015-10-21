@@ -35,7 +35,7 @@ class Media extends Model
      * @param $query
      */
     public function scopeAllByApp($query){
-        $query->where('application_id', '=', self::$app_id);
+        $query->withTranslation()->where('application_id', '=', self::$app_id);
     }
 
     /**

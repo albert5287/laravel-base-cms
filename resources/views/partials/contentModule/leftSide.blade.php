@@ -10,7 +10,7 @@
                         @foreach(getContentModulesForCurrentApp() as $index => $element)
                         <li>
                             <label class="menu-item-title">
-                                <a href="{{url($element->moduleType.'/'.$element->id)}}">{{$element->name}}</a>
+                                <a href="{{url($element->moduleType.'/'.$element->id)}}" class="{{HTML::isActive($element->moduleType.'/'.$element->id)}}">{{$element->name}}</a>
                             </label>
                         </li>
                         @endforeach

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Module;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -7,18 +8,18 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class BaseController extends Controller
 {
-
+    //TODO: to delete
     /**
      * Setup the layout used by the controller.
      *
      * @return void
      */
-    protected function setupLayout()
+   /* protected function setupLayout()
     {
         if (!is_null($this->layout)) {
             $this->layout = View::make($this->layout);
         }
-    }
+    }*/
 
     /**
      * function to setup the index table of an element in the cms
@@ -58,11 +59,27 @@ class BaseController extends Controller
                 'editButton', 'exportButton'));
     }
 
+    /**
+     * @param $page_title
+     * @param $class_name
+     * @param $header_table
+     * @param null $adittionalQueryConditions
+     * @param null $module
+     * @param string $defaultSort
+     * @param string $defaultOrder
+     * @param bool|true $addButton
+     * @param bool|true $editButton
+     * @param bool|false $exportButton
+     * @param bool|true $defaultElements
+     * @param null $customQuery
+     * @return \Illuminate\View\View
+     */
     protected function setupContentModuleIndex(
         $page_title,
         $class_name,
         $header_table,
         $adittionalQueryConditions = null,
+        $module = null,
         $defaultSort = 'id',
         $defaultOrder = 'asc',
         $addButton = true,
@@ -76,7 +93,7 @@ class BaseController extends Controller
         list($elements, $sort, $order, $search) = $tableElements;
         return view('partials.contentModule.index',
             compact('elements', 'page_title', 'header_table', 'class_name', 'sort', 'order', 'search', 'addButton',
-                'editButton', 'exportButton'));
+                'editButton', 'exportButton', 'module'));
     }
 
     /**
@@ -188,6 +205,10 @@ class BaseController extends Controller
                 ->paginate(PAGINATION);
         }
         return [$elements, $sort, $order, $search];
+    }
+
+    protected function getModule(){
+        return Module::where('class', $this->className)->first();
     }
 
 }

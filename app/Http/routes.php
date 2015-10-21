@@ -72,7 +72,7 @@ foreach(getAllActiveModules() as $module){
         Route::get($module->name.'/create/{module_application_id}', $module->class.'Controller@create');
         Route::get($module->name.'/{'.$module->name.'}/edit/{module_application_id}', $module->class.'Controller@edit');
         Route::delete($module->name.'/{'.$module->name.'}', $module->class.'Controller@destroy');
-        Route::put($module->name.'/{'.$module->name.'}', $module->class.'Controller@update');
+        Route::match(['put', 'patch'], $module->name.'/{'.$module->name.'}', $module->class.'Controller@update');
     }
     else{
         Route::resource($module->name, $module->class.'Controller');

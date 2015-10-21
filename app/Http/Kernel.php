@@ -29,6 +29,11 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        /*these middlewares are related to the roles package*/
+        'role' => \Bican\Roles\Middleware\VerifyRole::class,
+        'permission' => \Bican\Roles\Middleware\VerifyPermission::class,
+        'level' => \Bican\Roles\Middleware\VerifyLevel::class,
+        /*end middlewares related to the roles package*/
         'afterLoginSuccess' => \App\Http\Middleware\AfterLoginSuccess::class
     ];
 }

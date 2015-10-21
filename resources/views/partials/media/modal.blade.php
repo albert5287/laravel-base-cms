@@ -1,4 +1,5 @@
-@inject('multimedia', 'App\Media')
+@inject('media', 'App\Media')
+<?php $multimedia = $media->allByApp()->get(); ?>
         <!-- Modal -->
 <div class="modal fade" id="media-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog modal-lg-xl" role="document">
@@ -38,8 +39,8 @@
                         <div class="tab-pane active" id="tab_library">
                             <div class="dropzone">
                                 <div id="previews" class="dropzone-previews">
-                                    @if(!($multimedia->allByApp()->get()->isEmpty()))
-                                        @foreach($multimedia->allByApp()->get() as $media)
+                                    @if(!($multimedia->isEmpty()))
+                                        @foreach($multimedia as $media)
                                             @include('partials.media.previewImage', ['inputName' => 'mediaSelected[]', 'checkboxChecked' => false])
                                         @endforeach
                                     @endif

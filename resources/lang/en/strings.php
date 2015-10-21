@@ -23,6 +23,7 @@ return [
     'LABEL_INSERT_MEDIA' => 'Insert Media',
     'LABEL_UPLOAD_FILE' => 'Upload Files',
     'LABEL_MEDIA_LIBRARY' => 'Media Library',
+    'CONTENT_MODULE_LABEL' => 'Content Module',
     //strings for module Languages
     'TITLE_EDIT_LANGUAGE_PAGE' => 'Edit Language',
     'MESSAGE_SUCCESS_EDIT_LANGUAGE' => 'Language Updated',
