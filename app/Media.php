@@ -5,6 +5,7 @@ namespace App;
 use Dimsav\Translatable\Translatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Session;
 use Intervention\Image\Facades\Image;
 
 class Media extends Model
@@ -27,7 +28,17 @@ class Media extends Model
      */
     public $fillable = ['media_type_id','url', 'trash'];
 
-    protected static $app_id = 3; //TODO: read this dinamically
+    protected $app_id; //TODO: read this dinamically
+
+    /**
+     * Constructor.
+     *
+     * get the current app
+     */
+    public function __construct()
+    {
+        $this->app_id = Session::get('currentApp')->id;
+    }
 
 
     /**
@@ -35,7 +46,7 @@ class Media extends Model
      * @param $query
      */
     public function scopeAllByApp($query){
-        $query->withTranslation()->where('application_id', '=', self::$app_id);
+        $query->withTranslation()->where('application_id', '=', $this->app_id);
     }
 
     /**
@@ -59,7 +70,7 @@ class Media extends Model
      * @param $files
      * @return array
      */
-    public static function uploadAndSaveFiles($files){
+    public static function uploadAndSaveFiles($files, $application_id){
         $path = 'uploads/'.date("Ym").'/';
         $uploadedFiles = [];
         foreach($files as $file){
@@ -68,7 +79,7 @@ class Media extends Model
                 $origFileName = str_slug($aux['filename']) . '.' . $aux['extension'];
                 $fileName = time() . '_' . $origFileName; //create the name for the file
                 $file->move($path, $fileName); //move the file to the uploads folder
-                $media =self::createMedia($origFileName, $path . $fileName, self::getType($file));
+                $media =self::createMedia($origFileName, $path . $fileName, self::getType($file), $application_id);
                 $uploadedFiles[] = $media; //insert the id into the ids array
                 if (self::isImage($file)) {
                     self::createDifferentSizes($media); //create diferent sizes
@@ -119,10 +130,10 @@ class Media extends Model
      * @param $type
      * @return Media
      */
-    private static function createMedia($filename, $url, $type)
+    private static function createMedia($filename, $url, $type, $application_id)
     {
         $media = new Media(); //create the media instance
-        $media->application_id = 3;
+        $media->application_id = $application_id;
         $media->file_name = $filename; //fill the title
         $media->url = $url; //fill the url
         $media->media_type_id = $type; //fill the media type

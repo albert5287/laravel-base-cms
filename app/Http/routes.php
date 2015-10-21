@@ -62,8 +62,6 @@ Route::post('password/reset', [
 
 Route::get('change-current-app/{appId}', 'HomeController@changeCurrentApp');
 
-//Route::get('news/{module_application_id}', 'NewsController@index');
-
 //create routes for the active modules
 foreach(getAllActiveModules() as $module){
     if($module->is_content_module){

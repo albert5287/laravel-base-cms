@@ -121,9 +121,9 @@ class NewsController extends BaseController
     {
         $data = $request->all();
         insertUpdateMultiLanguage($new, $data);
-        if(isset($data['_relatedMedia'])){
-            $new->syncMedia($data['_relatedMedia']);
-        }
+        $relatedMedia = isset($data['_relatedMedia']) ? $data['_relatedMedia'] : [];
+        $new->syncMedia($relatedMedia);
+
 
     }
 

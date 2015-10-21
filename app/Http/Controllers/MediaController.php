@@ -18,10 +18,9 @@ class MediaController extends Controller
     public function store(Request $request)
     {
         $data = $request->all();
-        //dd($data);
         $uploadedFiles = [];
         if(isset($data['file']) && sizeof($data['file']) > 0){
-            $uploadedFiles = Media::uploadAndSaveFiles($data['file']);
+            $uploadedFiles = Media::uploadAndSaveFiles($data['file'], $data['application_id']);
         }
         return $uploadedFiles;
 

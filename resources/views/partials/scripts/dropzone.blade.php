@@ -8,7 +8,8 @@
     var myDropzone = new Dropzone("div#dropzoneFileUpload", {
         url: '{{action('MediaController@store')}}',
         params: {
-            _token: '{{ Session::getToken() }}'
+            _token: '{{ Session::getToken() }}',
+            application_id: '{{Session::get('currentApp')->id}}'
         },
         clickable:'#dropzoneFileUpload',
         uploadMultiple: true,
