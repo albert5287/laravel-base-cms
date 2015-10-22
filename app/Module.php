@@ -23,4 +23,12 @@ class Module extends Model
      * @var array
      */
     public $fillable = ['class' ,'name', 'enabled', 'show_sidebar', 'is_content_module', 'only_super_admin'];
+    
+    /**
+     * queryScope to get all active content modules
+     * @param $query
+     */
+    public function scopeActiveContentModules($query){
+        $query->withTranslation()->where('is_content_module', '=', true);
+    }
 }

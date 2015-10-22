@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Auth;
 //filter by active languages
 //maybe change to the model
 function getActiveLanguages(){
-    return Language::all();
+    return Language::withTranslation()->get();
 }
 //TODO
 //filter by active Modules

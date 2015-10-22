@@ -31,7 +31,7 @@ class ModuleApplication extends Model
      * @var array
      */
     // (optionaly)
-     protected $with = ['module'];
+     protected $with = ['module', 'translations'];
 
     public function module(){
         return $this->belongsTo('App\Module');

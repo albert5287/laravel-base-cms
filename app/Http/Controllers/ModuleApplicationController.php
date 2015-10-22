@@ -52,7 +52,7 @@ class ModuleApplicationController extends BaseController
     {
         $page_title = trans('strings.TITLE_CREATE_MODULES_APPLICATION_PAGE');
 
-        $modules = ['' => ''] + Module::all()->lists('title', 'id')->all();
+        $modules = $this->getListAvailableContentModules();
 
         return view('modules-app.create', compact('page_title', 'modules'));
     }
@@ -86,7 +86,7 @@ class ModuleApplicationController extends BaseController
 
         $page_title = trans('strings.TITLE_EDIT_COMPANY_PAGE');
 
-        $modules = ['' => ''] + Module::all()->lists('title', 'id')->all();
+        $modules = $this->getListAvailableContentModules();
 
         return view('modules-app.edit', compact('module', 'page_title', 'modules'));
     }
@@ -122,5 +122,10 @@ class ModuleApplicationController extends BaseController
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_APPLICATION_MODULE'));
 
         return $this->redirectPreviousUrl('modules-app');
+    }
+
+    private function getListAvailableContentModules()
+    {
+        return ['' => ''] + Session::get('currentApp')->availableModules()->get()->lists('title', 'id')->all();
     }
 }

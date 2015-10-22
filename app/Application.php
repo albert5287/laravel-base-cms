@@ -12,7 +12,7 @@ class Application extends Model
     ];
 
     public function availableModules(){
-        return $this->belongsToMany('App\Module')->withTimestamps();
+        return $this->belongsToMany('App\Module')->withTimestamps()->withTranslation();
     }
 
     /**

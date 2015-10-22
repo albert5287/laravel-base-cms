@@ -6,9 +6,7 @@ use App\Application;
 use App\Company;
 use App\Http\Requests\ApplicationRequest;
 use App\Module;
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 
 class ApplicationController extends BaseController
@@ -51,7 +49,7 @@ class ApplicationController extends BaseController
 
         $companies = ['' => ''] + Company::lists('name', 'id')->all();
 
-        $modules = Module::all()->lists('title', 'id'); //I have to call first all because the title in modules are translatable
+        $modules = $this->getListActiveContentModules();
 
         return view('application.create', compact('page_title', 'companies', 'modules'));
     }
@@ -66,9 +64,7 @@ class ApplicationController extends BaseController
     {
         $application = new Application();
 
-        insertUpdateMultiLanguage($application, $request->all());
-
-        $this->insertUpdateAvailableModules($application, $request->input('_modules'));
+        $this->insertUpdateApplication($application, $request);
 
         Session::forget('availableApps');
 
@@ -89,8 +85,10 @@ class ApplicationController extends BaseController
 
         $companies = ['' => ''] + Company::lists('name', 'id')->all();
 
-        $modules = Module::all()->lists('title', 'id');
+        $modules = $this->getListActiveContentModules();
+
         $page_title = trans('strings.TITLE_EDIT_APPLICATION_PAGE');
+
         return view('application.edit', compact('application', 'page_title', 'companies', 'modules'));
     }
 
@@ -103,7 +101,8 @@ class ApplicationController extends BaseController
      */
     public function update(Application $application, ApplicationRequest $request)
     {
-        insertUpdateMultiLanguage($application, $request->all());
+
+        $this->insertUpdateApplication($application, $request);
 
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_COMPANY'));
 
@@ -137,10 +136,33 @@ class ApplicationController extends BaseController
 
     /**
      * @param $application
+     * @param $request
+     */
+    private function insertUpdateApplication($application, $request)
+    {
+        insertUpdateMultiLanguage($application, $request->all());
+
+        $modulesToSync = NULL !== $request->input('_modules') ? $request->input('_modules') : [];
+
+        $this->insertUpdateAvailableModules($application, $modulesToSync);
+    }
+
+    /**
+     * @param $application
      * @param $modules
      */
     private function insertUpdateAvailableModules($application, $modules)
     {
         $application->availableModules()->sync($modules);
     }
+
+    /**get a list of the active content modules
+     * @return mixed
+     */
+    private function getListActiveContentModules()
+    {
+        return Module::activeContentModules()->get()->lists('title', 'id');
+    }
+
+
 }
