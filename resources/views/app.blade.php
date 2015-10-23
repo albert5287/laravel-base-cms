@@ -46,6 +46,7 @@
 
 <!-- Scripts -->
 <script src="{{ asset('/js/all.js') }}"></script>
+<script src="//cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>
 @yield('scripts')
 </body>
 </html>

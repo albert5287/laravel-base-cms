@@ -49,7 +49,7 @@ return [
     |
     */
 
-    'locale' => 'en',
+    'locale' => 'de',
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
@@ -61,7 +61,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'de',
+    'fallback_locale' => 'en',
     /*
     |--------------------------------------------------------------------------
     | Encryption Key
@@ -145,6 +145,7 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Laracasts\Flash\FlashServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        yajra\Datatables\DatatablesServiceProvider::class,
 
     ],
     /*
@@ -198,6 +199,7 @@ return [
         'Excel' => 'Maatwebsite\Excel\Facades\Excel',
         'Flash'     => 'Laracasts\Flash\Flash',
         'Image' => 'Intervention\Image\Facades\Image',
+        'Datatables' => yajra\Datatables\Datatables::class,
     ],
 
 ];

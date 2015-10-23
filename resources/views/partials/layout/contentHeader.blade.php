@@ -1,7 +1,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        {{$page_title}}
+        {{$pageTitle}}
         <small>{{isset($page_description) ? $page_description : ''}}</small>
     </h1>
     <!--<ol class="breadcrumb">

@@ -15,6 +15,10 @@ class NewsController extends BaseController
 
     protected $className = 'News';
     protected $module = NULL;
+    protected $addButton = true;
+    protected $editButton = true;
+    protected $exportButton = false;
+    protected $customCollection = NULL;
 
     /**
      * Constructor.
@@ -32,25 +36,25 @@ class NewsController extends BaseController
      *
      * @return Response
      */
-    public function index($module_application_id)
+    public function index($module_application_id = 0)
     {
+        $pageTitle = $this->module->title;
 
-        $page_title = $this->module->title;
-
-        $header_table = [
+        $headerTable = [
             'title' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
             'subtitle' => trans('strings.HEADER_TABLE_FOR_CODE_IN_LANGUAGES')
         ];
 
-        $aditionalQueryCondtitions = $module_application_id > 0 ? [
+        /*$aditionalQueryCondtitions = $module_application_id > 0 ? [
             'where' => [
                 'module_application_id',
                 '=',
                 $module_application_id
             ]
-        ] : null;
+        ] : null;*/
 
-        return $this->setupContentModuleIndex($page_title, $this->className, $header_table, $aditionalQueryCondtitions, $module_application_id);
+        //return $this->setupContentModuleIndex($page_title, $this->className, $header_table, $aditionalQueryCondtitions, $module_application_id);
+        return $this->setupTable($pageTitle,$headerTable,$module_application_id, 'partials.contentModule.index');
     }
 
     /**

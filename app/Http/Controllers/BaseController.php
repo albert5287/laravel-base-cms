@@ -5,21 +5,37 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
 use Maatwebsite\Excel\Facades\Excel;
+use yajra\Datatables\Facades\Datatables;
 
 class BaseController extends Controller
 {
-    //TODO: to delete
-    /**
-     * Setup the layout used by the controller.
-     *
-     * @return void
-     */
-   /* protected function setupLayout()
-    {
-        if (!is_null($this->layout)) {
-            $this->layout = View::make($this->layout);
-        }
-    }*/
+
+    protected function setupTable(
+        $pageTitle = '',
+        $headerTable = null,
+        $module_application_id = 0,
+        $view = 'partials.table.index'
+    ) {
+        //dd(Input::get());
+
+        //allowed columns for the sorting
+        $allowedColumns = array_keys($headerTable);
+        //get sorting
+        $sort = Input::get('sort') === NULL ? false : Input::get('sort');
+        //get order
+        $order = Input::get('order') === NULL ? false : Input::get('order');
+        //get search
+        $search = Input::get('search');
+        //get page
+        $page = Input::get('page') === NULL ? 0 : Input::get('order');;
+
+        $class_name = $this->className;
+
+        return view('partials.table.index',
+            compact('pageTitle', 'headerTable', 'class_name', 'module_application_id', 'sort', 'order', 'page',
+                'search'));
+    }
+
 
     /**
      * function to setup the index table of an element in the cms
@@ -152,7 +168,7 @@ class BaseController extends Controller
         $className = "App\\" . $className;
         $model = new $className;
         $elements = $model->orderBy($sort, $order);
-        if ($adittionalQueryConditions !== NULL) {
+        if ($adittionalQueryConditions !== null) {
             foreach ($adittionalQueryConditions as $key => $value) {
                 $elements->$key($value[0], $value[1], $value[2]);
             }
@@ -179,7 +195,7 @@ class BaseController extends Controller
      * @param $customQuery
      * @return array
      */
-    private function setupTable(
+    private function _setupTable(
         $class_name,
         $header_table,
         $adittionalQueryConditions,
@@ -207,8 +223,28 @@ class BaseController extends Controller
         return [$elements, $sort, $order, $search];
     }
 
-    protected function getModule(){
+    /**
+     * @return mixed
+     */
+    protected function getModule()
+    {
         return Module::where('class', $this->className)->first();
+    }
+
+    /**
+     * Process datatables ajax request.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function data($module_application_id = null)
+    {
+        $className = "App\\" . $this->className;
+        $model = new $className;
+        $news = $model->withTranslation()->get();
+        return Datatables::of($news)
+            ->addColumn('action', function ($news) {
+                return '<a href="?edit=' . $news->id . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
+            })->make(true);
     }
 
 }
