@@ -12,12 +12,17 @@ use Illuminate\Support\Facades\Session;
 
 class ModuleApplicationController extends BaseController
 {
+    protected $className = 'ModuleApplication';
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        $this->module = $this->getModule();
+        $this->customCollection = ModuleApplication::withTranslation()
+                                    ->where('application_id', '=', Session::get('currentApp')->id)
+                                    ->get();
         $this->middleware('auth');
     }
 
@@ -28,19 +33,12 @@ class ModuleApplicationController extends BaseController
      */
     public function index()
     {
+        $pageTitle = $this->module->title;
 
-        $class_name = 'ModuleApplication';
-
-        $module = Module::where('class', $class_name)->first();
-
-        $page_title = $module->title;
-
-        $header_table = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_MODULES_APPLICATION'),
+        $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_MODULES_APPLICATION'),
             'moduleType' => trans('strings.HEADER_TABLE_FOR_MODULE_TYPE_IN_MODULES_APPLICATION')];
 
-        $adittionalQueryConditions = Session::has('currentApp') ?
-                                    ['where' => ['application_id', '=', Session::get('currentApp')->id]] : NULL;
-        return $this->setupIndexTable($page_title, $class_name, $header_table, $adittionalQueryConditions);
+        return $this->setupTable($pageTitle, $headerTable);
     }
 
     /**
@@ -50,11 +48,11 @@ class ModuleApplicationController extends BaseController
      */
     public function create()
     {
-        $page_title = trans('strings.TITLE_CREATE_MODULES_APPLICATION_PAGE');
+        $pageTitle = trans('strings.TITLE_CREATE_MODULES_APPLICATION_PAGE');
 
         $modules = $this->getListAvailableContentModules();
 
-        return view('modules-app.create', compact('page_title', 'modules'));
+        return view('modules-app.create', compact('pageTitle', 'modules'));
     }
 
     /**
@@ -84,11 +82,11 @@ class ModuleApplicationController extends BaseController
     {
         $this->setReturnUrl();
 
-        $page_title = trans('strings.TITLE_EDIT_COMPANY_PAGE');
+        $pageTitle = trans('strings.TITLE_EDIT_COMPANY_PAGE');
 
         $modules = $this->getListAvailableContentModules();
 
-        return view('modules-app.edit', compact('module', 'page_title', 'modules'));
+        return view('modules-app.edit', compact('module', 'pageTitle', 'modules'));
     }
 
     /**

@@ -12,12 +12,14 @@ use Illuminate\Support\Facades\App;
 
 class LanguageController extends BaseController
 {
+    protected $className = 'Language';
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        $this->module = $this->getModule();
         $this->middleware('auth');
     }
 
@@ -29,16 +31,12 @@ class LanguageController extends BaseController
     public function index()
     {
 
-        $class_name = 'Language';
+        $pageTitle = $this->module->title;
 
-        $module = Module::where('class', $class_name)->first();
-
-        $page_title = $module->title;
-
-        $header_table = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
+        $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
                         'code' => trans('strings.HEADER_TABLE_FOR_CODE_IN_LANGUAGES')];
 
-        return $this->setupIndexTable($page_title, $class_name, $header_table);
+        return $this->setupTable($pageTitle, $headerTable);
     }
 
     /**
@@ -48,9 +46,9 @@ class LanguageController extends BaseController
      */
     public function create()
     {
-        $page_title = trans('strings.TITLE_CREATE_LANGUAGE_PAGE');
+        $pageTitle = trans('strings.TITLE_CREATE_LANGUAGE_PAGE');
 
-        return view('language.create', compact('page_title'));
+        return view('language.create', compact('pageTitle'));
     }
 
     /**
@@ -78,8 +76,8 @@ class LanguageController extends BaseController
     {
         $this->setReturnUrl();
 
-        $page_title = trans('strings.TITLE_EDIT_LANGUAGE_PAGE');
-        return view('language.edit', compact('language', 'page_title'));
+        $pageTitle = trans('strings.TITLE_EDIT_LANGUAGE_PAGE');
+        return view('language.edit', compact('language', 'pageTitle'));
     }
 
     /**

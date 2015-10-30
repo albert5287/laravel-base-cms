@@ -73,7 +73,7 @@ class BaseController extends Controller
                 'search'));
     }
 
-
+    //TODO: TO DELETE
     /**
      * function to setup the index table of an element in the cms
      * @param $page_title
@@ -112,6 +112,7 @@ class BaseController extends Controller
                 'editButton', 'exportButton'));
     }
 
+    //TODO: TO DELETE
     /**
      * @param $page_title
      * @param $class_name
@@ -191,35 +192,28 @@ class BaseController extends Controller
     }
 
     /**
-     * function to get the default elements from a model
-     * @param $className
-     * @param $sort
-     * @param $order
-     * @param $search
-     * @param $allowedColumns
-     * @param $adittionalQueryConditions
+     * function to get the elements from a model
+     * @param $module_application_id
      * @return mixed
      */
-    private function getDefaultElements($className, $sort, $order, $search, $allowedColumns, $adittionalQueryConditions)
+    private function getElements($module_application_id)
     {
-        $className = "App\\" . $className;
+        $className = "App\\" . $this->className;
         $model = new $className;
-        $elements = $model->orderBy($sort, $order);
-        if ($adittionalQueryConditions !== null) {
-            foreach ($adittionalQueryConditions as $key => $value) {
-                $elements->$key($value[0], $value[1], $value[2]);
-            }
 
-        }
-        if (!empty($usedTraits = class_uses($model)) && isset($usedTraits['Dimsav\Translatable\Translatable'])) {
-            $elements->withTranslation();
-        }
-        if ($search !== '') {
-            foreach ($allowedColumns as $column) {
-                $elements->orWhere($column, 'like', '%' . $search . '%');
+        if ($this->customCollection !== null) {
+            $elements = $this->customCollection;
+        } else {
+            $elements = $model;
+            if ($module_application_id > 0) {
+                $elements = $elements->where('module_application_id', '=', $module_application_id);
             }
+            if (!empty($usedTraits = class_uses($model)) && isset($usedTraits['Dimsav\Translatable\Translatable'])) {
+                $elements = $elements->withTranslation();
+            }
+            $elements = $elements->get();
         }
-        return $elements->paginate(PAGINATION);
+        return $elements;
     }
 
     /**
@@ -273,24 +267,13 @@ class BaseController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function data($module_application_id = null)
+    public function data($module_application_id = 0)
     {
-        $className = "App\\" . $this->className;
-        $model = new $className;
-        if ($this->customCollection !== null) {
-            $elements = $this->customCollection;
-        } else {
-            if ($module_application_id > 0) {
-                $elements = $model
-                    ->where('module_application_id', '=', $module_application_id)
-                    ->withTranslation()->get();
-            } else {
-                $elements = $model->withTranslation()->get();
-            }
-        }
+        $elements = $this->getElements($module_application_id);
+
         return Datatables::of($elements)
-            ->addColumn('action', function ($elements) {
-                $editButton = $this->editButton($elements);
+            ->addColumn('action', function ($elements) use ($module_application_id) {
+                $editButton = $this->editButton($elements, $module_application_id);
                 $deleteButton = $this->deleteButton($elements);
                 return $editButton.$deleteButton;
             })->make(true);
@@ -324,12 +307,12 @@ class BaseController extends Controller
      * @param $elements
      * @return string
      */
-    private function editButton($elements)
+    private function editButton($elements, $module_application_id = 0)
     {
         $editButton = '';
         if($this->editButton){
             $url = action($this->className . 'Controller@edit',
-                $this->module === null ? [$elements->id] : [
+                $module_application_id === 0 ? [$elements->id] : [
                     $elements->id,
                     $this->module
                 ]);

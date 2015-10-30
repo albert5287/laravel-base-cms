@@ -37,8 +37,8 @@ class NewsController extends BaseController
         $pageTitle = $this->module->title;
 
         $headerTable = [
-            'title' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
-            'subtitle' => trans('strings.HEADER_TABLE_FOR_CODE_IN_LANGUAGES')
+            'title' => trans('strings.LABEL_FOR_TITLE'),
+            'subtitle' => trans('strings.LABEL_FOR_SUBTITLE')
         ];
 
         return $this->setupTable($pageTitle, $headerTable, $module_application_id, 'partials.contentModule.index');
@@ -70,7 +70,7 @@ class NewsController extends BaseController
 
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
 
-        return $this->redirectPreviousUrl('news/'.$new->module_application_id);
+        return $this->redirectPreviousUrl('news/' . $new->module_application_id);
     }
 
     /**

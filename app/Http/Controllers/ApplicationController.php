@@ -11,12 +11,14 @@ use Illuminate\Support\Facades\Session;
 
 class ApplicationController extends BaseController
 {
+    protected $className = 'Application';
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        $this->module = $this->getModule();
         $this->middleware('auth');
     }
 
@@ -27,15 +29,11 @@ class ApplicationController extends BaseController
      */
     public function index()
     {
-        $class_name = 'Application';
+        $pageTitle = $this->module->title;
 
-        $module = Module::where('class', $class_name)->first();
+        $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_APPLICATIONS')];
 
-        $page_title = $module->title;
-
-        $header_table = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_APPLICATIONS')];
-
-        return $this->setupIndexTable($page_title, $class_name, $header_table);
+        return $this->setupTable($pageTitle, $headerTable);
     }
 
     /**
@@ -45,13 +43,13 @@ class ApplicationController extends BaseController
      */
     public function create()
     {
-        $page_title = trans('strings.TITLE_CREATE_APPLICATION_PAGE');
+        $pageTitle = trans('strings.TITLE_CREATE_APPLICATION_PAGE');
 
         $companies = ['' => ''] + Company::lists('name', 'id')->all();
 
         $modules = $this->getListActiveContentModules();
 
-        return view('application.create', compact('page_title', 'companies', 'modules'));
+        return view('application.create', compact('pageTitle', 'companies', 'modules'));
     }
 
     /**
@@ -87,9 +85,9 @@ class ApplicationController extends BaseController
 
         $modules = $this->getListActiveContentModules();
 
-        $page_title = trans('strings.TITLE_EDIT_APPLICATION_PAGE');
+        $pageTitle = trans('strings.TITLE_EDIT_APPLICATION_PAGE');
 
-        return view('application.edit', compact('application', 'page_title', 'companies', 'modules'));
+        return view('application.edit', compact('application', 'pageTitle', 'companies', 'modules'));
     }
 
     /**

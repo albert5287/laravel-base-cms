@@ -62,10 +62,10 @@ Route::post('password/reset', [
 
 Route::get('change-current-app/{appId}', 'HomeController@changeCurrentApp');
 
-Route::any('news'.'/{module_application_id}/data', 'NewsController@data');
 //create routes for the active modules
 foreach(getAllActiveModules() as $module){
     if($module->is_content_module){
+        Route::any($module->name.'/{module_application_id}/data', $module->class.'Controller@data');
         Route::post($module->name, $module->class.'Controller@store');
         Route::get($module->name.'/{module_application_id}', $module->class.'Controller@index'); //list of a content module
         Route::get($module->name.'/create/{module_application_id}', $module->class.'Controller@create');
@@ -74,11 +74,9 @@ foreach(getAllActiveModules() as $module){
         Route::match(['put', 'patch'], $module->name.'/{'.$module->name.'}', $module->class.'Controller@update');
     }
     else{
+        Route::any($module->name.'/data', $module->class.'Controller@data');
         Route::resource($module->name, $module->class.'Controller');
     }
 }
 Route::get('content', 'ContentController@index');
-
-Route::any('datatables/data', 'DatatablesController@data');
-Route::resource('datatables', 'DatatablesController');
 

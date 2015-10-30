@@ -11,12 +11,14 @@ use App\Http\Controllers\Controller;
 
 class CompanyController extends BaseController
 {
+    protected $className = 'Company';
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        $this->module = $this->getModule();
         $this->middleware('auth');
     }
 
@@ -28,16 +30,12 @@ class CompanyController extends BaseController
     public function index()
     {
 
-        $class_name = 'Company';
+        $pageTitle = $this->module->title;
 
-        $module = Module::where('class', $class_name)->first();
-
-        $page_title = $module->title;
-
-        $header_table = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_COMPANIES'),
+        $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_COMPANIES'),
             'email' => trans('strings.HEADER_TABLE_FOR_EMAIL_IN_COMPANIES')];
 
-        return $this->setupIndexTable($page_title, $class_name, $header_table);
+        return $this->setupTable($pageTitle, $headerTable);
     }
 
     /**
@@ -47,9 +45,9 @@ class CompanyController extends BaseController
      */
     public function create()
     {
-        $page_title = trans('strings.TITLE_CREATE_COMPANY_PAGE');
+        $pageTitle = trans('strings.TITLE_CREATE_COMPANY_PAGE');
 
-        return view('company.create', compact('page_title'));
+        return view('company.create', compact('pageTitle'));
     }
 
     /**
@@ -78,8 +76,8 @@ class CompanyController extends BaseController
     {
         $this->setReturnUrl();
 
-        $page_title = trans('strings.TITLE_EDIT_COMPANY_PAGE');
-        return view('company.edit', compact('company', 'page_title'));
+        $pageTitle = trans('strings.TITLE_EDIT_COMPANY_PAGE');
+        return view('company.edit', compact('company', 'pageTitle'));
     }
 
     /**

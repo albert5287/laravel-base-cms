@@ -10,12 +10,14 @@ use App\Http\Controllers\Controller;
 
 class ModuleController extends BaseController
 {
+    protected $className = 'Module';
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        $this->module = $this->getModule();
         $this->middleware('auth');
     }
 
@@ -27,16 +29,12 @@ class ModuleController extends BaseController
     public function index()
     {
 
-        $class_name = 'Module';
+        $pageTitle = $this->module->title;
 
-        $module = Module::where('class', $class_name)->first();
-
-        $page_title = $module->title;
-
-        $header_table = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_MODULE'),
+        $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_MODULE'),
             'enabled' => trans('strings.HEADER_TABLE_FOR_ENABLED_IN_MODULE')];
 
-        return $this->setupIndexTable($page_title, $class_name, $header_table);
+        return $this->setupTable($pageTitle, $headerTable);
     }
 
     /**
@@ -46,9 +44,9 @@ class ModuleController extends BaseController
      */
     public function create()
     {
-        $page_title = trans('strings.TITLE_CREATE_MODULE_PAGE');
+        $pageTitle = trans('strings.TITLE_CREATE_MODULE_PAGE');
 
-        return view('module.create', compact('page_title'));
+        return view('module.create', compact('pageTitle'));
     }
 
     /**
@@ -76,8 +74,8 @@ class ModuleController extends BaseController
     {
         $this->setReturnUrl();
 
-        $page_title = trans('strings.TITLE_EDIT_MODULE_PAGE');
-        return view('module.edit', compact('module', 'page_title'));
+        $pageTitle = trans('strings.TITLE_EDIT_MODULE_PAGE');
+        return view('module.edit', compact('module', 'pageTitle'));
     }
 
     /**
