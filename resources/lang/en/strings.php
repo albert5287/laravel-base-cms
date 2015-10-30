@@ -87,6 +87,7 @@ return [
     'LABEL_FOR_CONTENT_MODULE_MENU' => 'Content Modules',
     'INSERT_MEDIA' => 'Insert Media',
     //String for News Module
+    'TITLE_CREATE_PAGE_NEWS' => 'Create New',
     'MESSAGE_SUCCESS_CREATE_NEWS' => 'New Created',
     'TITLE_EDIT_NEWS_PAGE' => 'Edit New',
     'MESSAGE_SUCCESS_EDIT_NEWS' => 'New edited',

@@ -32,9 +32,11 @@ class DatatablesController extends Controller
     {
         //dd(Input::get('lang'));
         $news = Module::withTranslation()->get();
+        //dd($news);
         return Datatables::of($news)
-            ->addColumn('action', function ($news) {
+            /*->addColumn('action', function ($news) {
                 return '<a href="?edit='.$news->id.'" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
-            })->make(true);
+            })*/
+            ->make(true);
     }
 }

@@ -9,29 +9,66 @@ use yajra\Datatables\Facades\Datatables;
 
 class BaseController extends Controller
 {
+    /**
+     * The Module type.
+     */
+    protected $module = null;
+    /**
+     * Variable to show add button in the view
+     * true by default.
+     */
+    protected $addButton = true;
+    /**
+     * Variable to show edit button in the table
+     * true by default.
+     */
+    protected $editButton = true;
+    /**
+     * Variable to show delete button in the table
+     * true by default.
+     */
+    protected $deleteButton = true;
+    /**
+     * Variable to show export button in the table
+     * false by default.
+     */
+    protected $exportButton = false;
+    /**
+     * Variable to set the collection that
+     * is going to be show in the table
+     * NULL by default.
+     * To setup the collection, the collection has to
+     * be set up in the constructor
+     */
+    protected $customCollection = null;
 
+
+    /**
+     * function to set up the table
+     * @param string $pageTitle
+     * @param null $headerTable
+     * @param int $module_application_id
+     * @param string $view
+     * @return \BladeView|bool|\Illuminate\View\View
+     */
     protected function setupTable(
         $pageTitle = '',
         $headerTable = null,
         $module_application_id = 0,
         $view = 'partials.table.index'
     ) {
-        //dd(Input::get());
-
-        //allowed columns for the sorting
-        $allowedColumns = array_keys($headerTable);
         //get sorting
-        $sort = Input::get('sort') === NULL ? false : Input::get('sort');
+        $sort = Input::get('sort') === null ? false : Input::get('sort');
         //get order
-        $order = Input::get('order') === NULL ? false : Input::get('order');
+        $order = Input::get('order') === null ? false : Input::get('order');
         //get search
         $search = Input::get('search');
         //get page
-        $page = Input::get('page') === NULL ? 0 : Input::get('order');;
+        $page = Input::get('page') === null ? 0 : Input::get('order');;
 
         $class_name = $this->className;
 
-        return view('partials.table.index',
+        return view($view,
             compact('pageTitle', 'headerTable', 'class_name', 'module_application_id', 'sort', 'order', 'page',
                 'search'));
     }
@@ -240,11 +277,68 @@ class BaseController extends Controller
     {
         $className = "App\\" . $this->className;
         $model = new $className;
-        $news = $model->withTranslation()->get();
-        return Datatables::of($news)
-            ->addColumn('action', function ($news) {
-                return '<a href="?edit=' . $news->id . '" class="btn btn-xs btn-primary"><i class="glyphicon glyphicon-edit"></i> Edit</a>';
+        if ($this->customCollection !== null) {
+            $elements = $this->customCollection;
+        } else {
+            if ($module_application_id > 0) {
+                $elements = $model
+                    ->where('module_application_id', '=', $module_application_id)
+                    ->withTranslation()->get();
+            } else {
+                $elements = $model->withTranslation()->get();
+            }
+        }
+        return Datatables::of($elements)
+            ->addColumn('action', function ($elements) {
+                $editButton = $this->editButton($elements);
+                $deleteButton = $this->deleteButton($elements);
+                return $editButton.$deleteButton;
             })->make(true);
+    }
+
+    /**
+     * @param $element
+     * @return string
+     */
+    private function deleteButton($element)
+    {
+        $deleteButton = '';
+        if($this->deleteButton){
+            $url = action($this->className . 'Controller@destroy', [$element->id]);
+            $deleteButton = '<form method="POST" action="'.$url.'" accept-charset="UTF-8" id="deleteForm_'.$element->id.'">
+                                <input name="_method" type="hidden" value="DELETE">
+                                <input name="_token" type="hidden" value="'.csrf_token().'">
+                                <button type="button" class="btn btn-danger qs" data-toggle="modal" data-target="#modal"
+                                    data-title="L&ouml;schen?" data-body="M&ouml;chten Sie den Eintrag wirklich l&ouml;schen?"
+                                    data-btnconfirm="L&ouml;schen" data-form="deleteForm_'.$element->id.'"
+                                    data-elementid="'.$element->id.'">
+                                    <i class="fa fa-trash"></i><span class="popover above">l&ouml;schen</span>
+                                </button>
+                            </form>';
+        }
+        return $deleteButton;
+
+    }
+
+    /**
+     * @param $elements
+     * @return string
+     */
+    private function editButton($elements)
+    {
+        $editButton = '';
+        if($this->editButton){
+            $url = action($this->className . 'Controller@edit',
+                $this->module === null ? [$elements->id] : [
+                    $elements->id,
+                    $this->module
+                ]);
+            $editButton = '<a href="'.$url.'" class="btn btn-info pull-left qs" style="margin-right: 3px;">
+                                <i class="fa fa-edit"></i>
+                                <span class="popover above">bearbeiten</span>
+                            </a>';
+        }
+        return $editButton;
     }
 
 }

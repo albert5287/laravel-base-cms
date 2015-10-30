@@ -14,11 +14,7 @@ class NewsController extends BaseController
 {
 
     protected $className = 'News';
-    protected $module = NULL;
-    protected $addButton = true;
-    protected $editButton = true;
-    protected $exportButton = false;
-    protected $customCollection = NULL;
+
 
     /**
      * Constructor.
@@ -45,16 +41,7 @@ class NewsController extends BaseController
             'subtitle' => trans('strings.HEADER_TABLE_FOR_CODE_IN_LANGUAGES')
         ];
 
-        /*$aditionalQueryCondtitions = $module_application_id > 0 ? [
-            'where' => [
-                'module_application_id',
-                '=',
-                $module_application_id
-            ]
-        ] : null;*/
-
-        //return $this->setupContentModuleIndex($page_title, $this->className, $header_table, $aditionalQueryCondtitions, $module_application_id);
-        return $this->setupTable($pageTitle,$headerTable,$module_application_id, 'partials.contentModule.index');
+        return $this->setupTable($pageTitle, $headerTable, $module_application_id, 'partials.contentModule.index');
     }
 
     /**
@@ -65,9 +52,9 @@ class NewsController extends BaseController
     public function create($module_application_id)
     {
         $this->setReturnUrl();
-        $page_title = trans('strings.TITLE_CREATE_LANGUAGE_PAGE');
+        $pageTitle = trans('strings.TITLE_CREATE_PAGE_NEWS');
 
-        return view('news.create', compact('page_title', 'module_application_id'));
+        return view('news.create', compact('pageTitle', 'module_application_id'));
     }
 
     /**
@@ -96,8 +83,8 @@ class NewsController extends BaseController
     {
         $this->setReturnUrl();
 
-        $page_title = trans('strings.TITLE_EDIT_NEWS_PAGE');
-        return view('news.edit', compact('new', 'page_title'));
+        $pageTitle = trans('strings.TITLE_EDIT_NEWS_PAGE');
+        return view('news.edit', compact('new', 'pageTitle'));
     }
 
     /**

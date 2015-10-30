@@ -74,7 +74,7 @@
                         ajax: '{!! action($class_name.'Controller@data',[$module_application_id]) !!}',
                         columns: [
                                 @foreach($headerTable as $key => $value)
-                                    {data: '{{$key}}', name: '{{$value}}'},
+                                    {data: '{{$key}}', name: '{{$key}}'},
                                 @endforeach
                             {data: 'action', name: 'action', orderable: false, searchable: false}
                         ],
@@ -87,7 +87,7 @@
 
                     });
             @if($search !== '')
-                table.search('new').draw();
+                table.search('{{$search}}').draw();
             @endif
 
 

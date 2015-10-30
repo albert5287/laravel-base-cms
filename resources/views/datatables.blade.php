@@ -32,7 +32,7 @@
             {{--<th>Email</th>--}}
             <th>Created At</th>
             <th>Updated At</th>
-            <th>action</th>
+           {{-- <th>action</th>--}}
         </tr>
         </thead>
     </table>
@@ -52,16 +52,16 @@
                 .DataTable({
             processing: true,
             serverSide: true,
-            ajax: '{!! action('NewsController@data',[1]) !!}',
+            ajax: '{!! action('DatatablesController@data') !!}',
             columns: [
                 //{ data: 'id', name: 'id' },
-                { data: 'title', name: 'title' },
+                { data: 'name', name: 'name' },
                 /*{ data: 'subtitle', name: 'subtitle' },*/
                 { data: 'created_at', name: 'created_at' },
                 { data: 'updated_at', name: 'updated_at' },
-                {data: 'action', name: 'action', orderable: false, searchable: false}
+                //{data: 'action', name: 'action', orderable: false, searchable: false}
             ],
-            order: [[1]],
+            //order: [[1]],
             "displayStart": 0,
         });
         //table.search('new').draw();
