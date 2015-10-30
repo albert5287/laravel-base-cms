@@ -21,6 +21,7 @@ elixir(function(mix) {
             'vendor/bootstrap.css',
             'vendor/nestedSortable.css',
             'vendor/dropzone.css',
+            'vendor/datatables.css',
     ]).version('css/all.css');
 
     mix.scripts([
@@ -29,6 +30,8 @@ elixir(function(mix) {
         'libs/jquery-ui.min.js',
         'libs/nestedSortable.js',
         'libs/dropzone.js',
+        'libs/jquery.dataTables.min.js',
+        'libs/bootstrap.dataTables.min.js',
         'app.js',
     ], 'public/js/all.js');
 });
