@@ -26,7 +26,3 @@
     </div>
 </div>
 <!-- /.box -->
-
-@section('scripts')
-    @include('partials.formScripts')
-@stop

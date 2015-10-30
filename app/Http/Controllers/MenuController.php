@@ -27,11 +27,11 @@ class MenuController extends Controller
      */
     public function index()
     {
-        $page_title = trans('strings.TITLE_CREATE_COMPANY_PAGE');
+        $pageTitle = trans('strings.TITLE_CREATE_COMPANY_PAGE');
         $menus = Menu::where('application_id', '=', $this->id_app)->lists('name', 'id')->all();
         //if the app has not menu go to create
         if(empty($menus)){
-            return view('menu.create', compact('page_title', 'menus'));
+            return view('menu.create', compact('pageTitle', 'menus'));
         }
         //if it has menu get the enabled one and go to edit
         else{
@@ -48,9 +48,9 @@ class MenuController extends Controller
     public function create()
     {
         $menus = Menu::where('application_id', '=', $this->id_app)->lists('name', 'id')->all();
-        $page_title = trans('strings.TITLE_CREATE_COMPANY_PAGE');
+        $pageTitle = trans('strings.TITLE_CREATE_COMPANY_PAGE');
 
-        return view('menu.create', compact('page_title', 'menus'));
+        return view('menu.create', compact('pageTitle', 'menus'));
     }
 
     /**
@@ -61,9 +61,9 @@ class MenuController extends Controller
      */
     public function edit(Menu $menu)
     {
-        $page_title = trans('strings.TITLE_EDIT_COMPANY_PAGE');
+        $pageTitle = trans('strings.TITLE_EDIT_COMPANY_PAGE');
         $menus = Menu::where('application_id', '=', $this->id_app)->lists('name', 'id')->all();
-        return view('menu.edit', compact('page_title', 'menus', 'menu'));
+        return view('menu.edit', compact('pageTitle', 'menus', 'menu'));
     }
 
     /**

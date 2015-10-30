@@ -51,7 +51,5 @@
 </div><!-- /.box -->
 @include('partials.media.modal')
 
-@section('scripts')
-    @include('partials.scripts.ckEditor')
-    @include('partials.scripts.dropzone')
-@stop
+@include('partials.scripts.ckEditor')
+@include('partials.scripts.dropzone')

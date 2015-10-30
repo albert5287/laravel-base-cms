@@ -1,3 +1,4 @@
+@push('scripts')
 <script src="{{ asset('/vendors/ckeditor/ckeditor.js') }}"></script>
 <script>
     $(function () {
@@ -7,3 +8,4 @@
         })
     });
 </script>
+@endpush

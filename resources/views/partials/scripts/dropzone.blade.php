@@ -1,3 +1,4 @@
+@push('scripts')
 <script>
     var limitElements = -1;
     var destinationDiv = 'related-media';
@@ -161,3 +162,4 @@
     }
 
 </script>
+@endpush

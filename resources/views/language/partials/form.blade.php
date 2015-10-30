@@ -33,7 +33,3 @@
         {!! Form::submit($submitButtonText, ['class' => 'btn btn-primary']) !!}
     </div>
 </div><!-- /.box -->
-
-@section('scripts')
-    @include('partials.formScripts')
-@stop

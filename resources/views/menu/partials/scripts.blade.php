@@ -1,4 +1,4 @@
-@section('scripts')
+@push('scripts')
     <script>
         function goToSelectedMenu() {
             var urlTo = "{{ action('MenuController@edit', ['%menu_id%']) }}";
@@ -131,4 +131,4 @@
 
 
     </script>
-@stop
+@endpush

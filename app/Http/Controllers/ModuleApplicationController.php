@@ -36,7 +36,7 @@ class ModuleApplicationController extends BaseController
         $pageTitle = $this->module->title;
 
         $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_MODULES_APPLICATION'),
-            'moduleType' => trans('strings.HEADER_TABLE_FOR_MODULE_TYPE_IN_MODULES_APPLICATION')];
+            'module.name' => trans('strings.HEADER_TABLE_FOR_MODULE_TYPE_IN_MODULES_APPLICATION')];
 
         return $this->setupTable($pageTitle, $headerTable);
     }
