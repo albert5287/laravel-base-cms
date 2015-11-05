@@ -29,6 +29,7 @@ return [
     'LABEL_ROLES' => 'Roles',
     'LABEL_NAME' => 'Name',
     'LABEL_EMAIL' => 'Email',
+    'LABEL_DESCRIPTION' => 'Description',
     //strings for module Languages
     'TITLE_EDIT_LANGUAGE_PAGE' => 'Edit Language',
     'MESSAGE_SUCCESS_EDIT_LANGUAGE' => 'Language Updated',

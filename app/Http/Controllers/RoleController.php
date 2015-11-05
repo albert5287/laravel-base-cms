@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Application;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Route;
 
 class RoleController extends BaseController
 {
@@ -20,7 +22,6 @@ class RoleController extends BaseController
         $urlParameters = Route::current()->parameters();
         $this->application = Application::find($urlParameters['app_id']);
         $this->module = $this->getModule();
-        //dd($this->application->roles);
         $this->customCollection = $this->application->roles;
         $this->middleware('auth');
     }
@@ -35,8 +36,8 @@ class RoleController extends BaseController
     {
         $pageTitle = $this->module->title;
 
-        $headerTable = ['name' => trans('strings.LABEL_NAME'), 'email' => trans('strings.LABEL_EMAIL')];
+        $headerTable = ['name' => trans('strings.LABEL_NAME'), 'description' => trans('strings.LABEL_DESCRIPTION')];
 
-        return $this->setupTable($pageTitle, $headerTable, $app_id, 'users.index', $this->application);
+        return $this->setupTable($pageTitle, $headerTable, $app_id, 'roles.index', $this->application);
     }
 }

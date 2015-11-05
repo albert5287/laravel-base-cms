@@ -80,7 +80,7 @@ Route::get('apps/roles/{roles}/edit/{app_id}', 'RoleController@edit');
 Route::delete('apps/roles/{roles}', 'RoleController@destroy');
 Route::match(['put', 'patch'], 'apps/roles/{roles}', 'RoleController@update');
 foreach(getAllActiveModules() as $module){
-    if($module->name !== 'users') {
+    if($module->name !== 'users' && $module->name !== 'roles') {
         if ($module->is_content_module) {
             Route::any($module->name . '/{module_application_id}/data', $module->class . 'Controller@data');
             Route::post($module->name, $module->class . 'Controller@store');

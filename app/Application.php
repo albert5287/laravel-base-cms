@@ -26,7 +26,7 @@ class Application extends Model
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles(){
-        //return $this->belongsToMany('Bican\Roles\Models\Role');
+        return $this->belongsToMany('Bican\Roles\Models\Role');
     }
 
     public function isEqual(Application $app){

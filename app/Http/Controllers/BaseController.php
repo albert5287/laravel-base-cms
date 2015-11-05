@@ -199,12 +199,13 @@ class BaseController extends Controller
      */
     private function getElements($module_application_id)
     {
-        $className = "App\\" . $this->className;
-        $model = new $className;
+
 
         if ($this->customCollection !== null) {
             $elements = $this->customCollection;
         } else {
+            $className = "App\\" . $this->className;
+            $model = new $className;
             $elements = $model;
             if ($module_application_id > 0) {
                 $elements = $elements->where('module_application_id', '=', $module_application_id);
