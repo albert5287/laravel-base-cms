@@ -63,19 +63,39 @@ Route::post('password/reset', [
 Route::get('change-current-app/{appId}', 'HomeController@changeCurrentApp');
 
 //create routes for the active modules
+//users
+Route::any('apps/users/{app_id}/data', 'UserController@data');
+Route::post('apps/users', 'UserController@store');
+Route::get('apps/users/{app_id}', 'UserController@index'); //list of a content module
+Route::get('apps/users/create/{app_id}', 'UserController@create');
+Route::get('apps/users/{users}/edit/{app_id}', 'UserController@edit');
+Route::delete('apps/users/{users}', 'UserController@destroy');
+Route::match(['put', 'patch'], 'apps/users/{users}', 'UserController@update');
+//roles
+Route::any('apps/roles/{app_id}/data', 'RoleController@data');
+Route::post('apps/roles', 'RoleController@store');
+Route::get('apps/roles/{app_id}', 'RoleController@index'); //list of a content module
+Route::get('apps/roles/create/{app_id}', 'RoleController@create');
+Route::get('apps/roles/{roles}/edit/{app_id}', 'RoleController@edit');
+Route::delete('apps/roles/{roles}', 'RoleController@destroy');
+Route::match(['put', 'patch'], 'apps/roles/{roles}', 'RoleController@update');
 foreach(getAllActiveModules() as $module){
-    if($module->is_content_module){
-        Route::any($module->name.'/{module_application_id}/data', $module->class.'Controller@data');
-        Route::post($module->name, $module->class.'Controller@store');
-        Route::get($module->name.'/{module_application_id}', $module->class.'Controller@index'); //list of a content module
-        Route::get($module->name.'/create/{module_application_id}', $module->class.'Controller@create');
-        Route::get($module->name.'/{'.$module->name.'}/edit/{module_application_id}', $module->class.'Controller@edit');
-        Route::delete($module->name.'/{'.$module->name.'}', $module->class.'Controller@destroy');
-        Route::match(['put', 'patch'], $module->name.'/{'.$module->name.'}', $module->class.'Controller@update');
-    }
-    else{
-        Route::any($module->name.'/data', $module->class.'Controller@data');
-        Route::resource($module->name, $module->class.'Controller');
+    if($module->name !== 'users') {
+        if ($module->is_content_module) {
+            Route::any($module->name . '/{module_application_id}/data', $module->class . 'Controller@data');
+            Route::post($module->name, $module->class . 'Controller@store');
+            Route::get($module->name . '/{module_application_id}',
+                $module->class . 'Controller@index'); //list of a content module
+            Route::get($module->name . '/create/{module_application_id}', $module->class . 'Controller@create');
+            Route::get($module->name . '/{' . $module->name . '}/edit/{module_application_id}',
+                $module->class . 'Controller@edit');
+            Route::delete($module->name . '/{' . $module->name . '}', $module->class . 'Controller@destroy');
+            Route::match(['put', 'patch'], $module->name . '/{' . $module->name . '}',
+                $module->class . 'Controller@update');
+        } else {
+            Route::any($module->name . '/data', $module->class . 'Controller@data');
+            Route::resource($module->name, $module->class . 'Controller');
+        }
     }
 }
 Route::get('content', 'ContentController@index');

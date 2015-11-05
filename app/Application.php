@@ -22,6 +22,13 @@ class Application extends Model
         return $this->belongsToMany('App\User');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles(){
+        //return $this->belongsToMany('Bican\Roles\Models\Role');
+    }
+
     public function isEqual(Application $app){
         return $this->id === $app->id;
     }

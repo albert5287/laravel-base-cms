@@ -8,6 +8,6 @@
                 {{$header}}
             </th>
         @endforeach
-        <th style="min-width: 75px">Aktion</th>
+        <th>Aktion</th>
     </tr>
 </thead>

@@ -55,7 +55,8 @@ class BaseController extends Controller
         $pageTitle = '',
         $headerTable = null,
         $module_application_id = 0,
-        $view = 'partials.table.index'
+        $view = 'partials.table.index',
+        $application = NULL
     ) {
         //get sorting
         $sort = Input::get('sort') === null ? false : Input::get('sort');
@@ -70,7 +71,7 @@ class BaseController extends Controller
 
         return view($view,
             compact('pageTitle', 'headerTable', 'class_name', 'module_application_id', 'sort', 'order', 'page',
-                'search'));
+                'search', 'application'));
     }
 
     //TODO: TO DELETE

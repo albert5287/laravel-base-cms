@@ -2,7 +2,7 @@
 @include('partials.table.exportButtonTable')
 <div class="box">
     <div class="box-body">
-        <table id="table" class="table table-bordered table-hover">
+        <table id="table" class="table table-bordered table-hover dt-responsive">
             @include('partials.table.headerTable')
         </table>
     </div><!-- /.box-body -->

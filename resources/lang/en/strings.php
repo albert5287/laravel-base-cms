@@ -24,6 +24,11 @@ return [
     'LABEL_UPLOAD_FILE' => 'Upload Files',
     'LABEL_MEDIA_LIBRARY' => 'Media Library',
     'CONTENT_MODULE_LABEL' => 'Content Module',
+    'LABEL_APPLICATION' => 'App',
+    'LABEL_USERS' => 'Users',
+    'LABEL_ROLES' => 'Roles',
+    'LABEL_NAME' => 'Name',
+    'LABEL_EMAIL' => 'Email',
     //strings for module Languages
     'TITLE_EDIT_LANGUAGE_PAGE' => 'Edit Language',
     'MESSAGE_SUCCESS_EDIT_LANGUAGE' => 'Language Updated',

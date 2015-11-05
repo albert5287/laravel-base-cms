@@ -179,5 +179,10 @@
     }
 }
 
+@media (max-width: 767px) {
+    #table th:last-child {
+        min-width: 75px !important;
+    }
+}
 
 

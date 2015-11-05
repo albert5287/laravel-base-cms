@@ -6,27 +6,6 @@
             $('.modal-body').html(option.data('body'));
             $('#btnConfirm').html(option.data('btnconfirm'));
             $('#btnConfirm').attr('data-form', option.data('form'));
-                    @if($class_name === 'User')
-                        var userId = option.data('elementid');
-            var token = option.data('elementid');
-            $.ajax({
-                type: 'post', // or post?
-                dataType: 'json',
-                url: '{{action('UserController@getInfoWedding')}}', // change as needed
-                data: {id: userId, _token: '{{csrf_token()}}'}, // if you are posting
-                success: function (data) {
-                    var body = "<p>By Deleting this user you're going to delete the wedding with date " + data.date + ".</p>"
-                    body += "<p>And the users with the folowing email: <ul><li>" + data.email1 + '</li> <li>' + data.email2 + '</li></ul></p>';
-                    $('.modal-body').html(body);
-                },
-                error: function (xhr, textStatus, thrownError) {
-                    alert(xhr.status);
-                    alert(thrownError);
-                }
-            });
-            @endif
-
-
         });
 
         $('#btnConfirm').click(function () {
@@ -45,6 +24,7 @@
                     .DataTable({
                         processing: true,
                         serverSide: true,
+                        autoWidth: false,
                         ajax: '{!! action($class_name.'Controller@data',$module_application_id > 0 ?[$module_application_id] : []) !!}',
                         columns: [
                                 @foreach($headerTable as $key => $value)
