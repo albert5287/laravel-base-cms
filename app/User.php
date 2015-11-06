@@ -43,8 +43,13 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
         return $this->belongsToMany('App\Application');
     }
 
+    /**function to check if 2 users are the same
+     * @param User $user
+     * @return bool
+     */
     public function isEqual(User $user){
         return $this->id === $user->id;
     }
+
 
 }

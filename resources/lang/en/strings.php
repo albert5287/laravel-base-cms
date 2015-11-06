@@ -35,6 +35,7 @@ return [
     'LABEL_CREATE' => 'Create',
     'LABEL_DELETE' => 'Delete',
     'LABEL_PERMISSIONS' => 'Permissions',
+    'LABEL_PASSWORD' => 'Pasword',
     //strings for module Languages
     'TITLE_EDIT_LANGUAGE_PAGE' => 'Edit Language',
     'MESSAGE_SUCCESS_EDIT_LANGUAGE' => 'Language Updated',
@@ -104,5 +105,7 @@ return [
     'TITLE_EDIT_NEWS_PAGE' => 'Edit New',
     'MESSAGE_SUCCESS_EDIT_NEWS' => 'New edited',
     //Strings for Roles module
-    'TITLE_CREATE_PAGE_NEWS' => 'Create Role',
+    'TITLE_CREATE_PAGE_ROLE' => 'Create Role',
+    //Strings for Users module
+    'TITLE_CREATE_PAGE_USER' => 'Create user',
 ];

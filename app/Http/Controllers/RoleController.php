@@ -7,9 +7,7 @@ use App\Http\Requests\RolesRequest;
 use App\Module;
 use Bican\Roles\Models\Permission;
 use Bican\Roles\Models\Role;
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
@@ -145,7 +143,7 @@ class RoleController extends BaseController
     /**
      * Remove the specified resource from storage.
      *
-     * @param  News $new
+     * @param $roles
      * @return Response
      */
     public function destroy($roles)
@@ -159,7 +157,7 @@ class RoleController extends BaseController
         return $this->redirectPreviousUrl();
     }
 
-    /**Funtion To get all the modules of an application
+    /**Function To get all the modules of an application
      * @return mixed
      */
     private function getModulesApplication()
