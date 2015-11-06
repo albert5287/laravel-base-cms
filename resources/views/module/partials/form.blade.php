@@ -45,6 +45,11 @@
                     <span>{{trans('strings.YES')}}: </span> {!! Form::radio('only_super_admin', true) !!}
                     <span>{{trans('strings.NO')}}: </span> {!! Form::radio('only_super_admin', false, true) !!}
                 </div>
+                <div class="form-group">
+                    {!! Form::label('enabled', trans('strings.LABEL_FOR_DEFAULT_APP_MODULE_FORM').':') !!}
+                    <span>{{trans('strings.YES')}}: </span> {!! Form::radio('default_app', true) !!}
+                    <span>{{trans('strings.NO')}}: </span> {!! Form::radio('default_app', false, true) !!}
+                </div>
             </div>
             <!-- /.tab-content -->
         </div>

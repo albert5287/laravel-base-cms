@@ -20,6 +20,7 @@ class CreateModulesTable extends Migration
             $table->boolean('show_sidebar')->default(true);
             $table->boolean('is_content_module')->default(true);
             $table->boolean('only_super_admin')->default(true);
+            $table->boolean('default_app')->default(false);
             $table->timestamps();
         });
 

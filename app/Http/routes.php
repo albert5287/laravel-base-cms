@@ -73,12 +73,12 @@ Route::delete('apps/users/{users}', 'UserController@destroy');
 Route::match(['put', 'patch'], 'apps/users/{users}', 'UserController@update');
 //roles
 Route::any('apps/roles/{app_id}/data', 'RoleController@data');
-Route::post('apps/roles', 'RoleController@store');
+Route::post('roles/{app_id}', 'RoleController@store');
 Route::get('apps/roles/{app_id}', 'RoleController@index'); //list of a content module
 Route::get('apps/roles/create/{app_id}', 'RoleController@create');
 Route::get('apps/roles/{roles}/edit/{app_id}', 'RoleController@edit');
 Route::delete('apps/roles/{roles}', 'RoleController@destroy');
-Route::match(['put', 'patch'], 'apps/roles/{roles}', 'RoleController@update');
+Route::match(['put', 'patch'], 'roles/{roles}/{app_id}', 'RoleController@update');
 foreach(getAllActiveModules() as $module){
     if($module->name !== 'users' && $module->name !== 'roles') {
         if ($module->is_content_module) {

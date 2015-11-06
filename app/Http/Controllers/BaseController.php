@@ -41,6 +41,14 @@ class BaseController extends Controller
      * be set up in the constructor
      */
     protected $customCollection = null;
+    /**
+     * Variable to set the collection that
+     * is going to be show in the table
+     * NULL by default.
+     * To setup the collection, the collection has to
+     * be set up in the constructor
+     */
+    protected $customUrlEditParameters = null;
 
 
     /**
@@ -184,7 +192,7 @@ class BaseController extends Controller
      * @param $url
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    protected function redirectPreviousUrl($url)
+    protected function redirectPreviousUrl($url = 'home')
     {
         if (Session::has('returnUrl')) {
             $url = Session::pull('returnUrl', 'default');
@@ -218,6 +226,7 @@ class BaseController extends Controller
         return $elements;
     }
 
+    //TODO: TO DELETE
     /**
      * @param $class_name
      * @param $header_table
@@ -311,13 +320,19 @@ class BaseController extends Controller
      */
     private function editButton($elements, $module_application_id = 0)
     {
+        //dd($module_application_id);
         $editButton = '';
         if($this->editButton){
-            $url = action($this->className . 'Controller@edit',
-                $module_application_id === 0 ? [$elements->id] : [
-                    $elements->id,
-                    $this->module
-                ]);
+            $urlParams = [$elements->id];
+            if($this->customUrlEditParameters === null) {
+                if($module_application_id !== 0) {
+                    $urlParams[] = $this->module;
+                }
+            }
+            else{
+                $urlParams = array_merge($urlParams, $this->customUrlEditParameters);
+            }
+            $url = action($this->className . 'Controller@edit',$urlParams);
             $editButton = '<a href="'.$url.'" class="btn btn-info pull-left qs" style="margin-right: 3px;">
                                 <i class="fa fa-edit"></i>
                                 <span class="popover above">bearbeiten</span>

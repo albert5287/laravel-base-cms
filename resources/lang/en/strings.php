@@ -30,6 +30,11 @@ return [
     'LABEL_NAME' => 'Name',
     'LABEL_EMAIL' => 'Email',
     'LABEL_DESCRIPTION' => 'Description',
+    'LABEL_MODULES' => 'Modules',
+    'LABEL_SHOW' => 'Show',
+    'LABEL_CREATE' => 'Create',
+    'LABEL_DELETE' => 'Delete',
+    'LABEL_PERMISSIONS' => 'Permissions',
     //strings for module Languages
     'TITLE_EDIT_LANGUAGE_PAGE' => 'Edit Language',
     'MESSAGE_SUCCESS_EDIT_LANGUAGE' => 'Language Updated',
@@ -53,6 +58,7 @@ return [
     'LABEL_FOR_SHOW_SIDEBAR_MODULE_FORM' => 'Show in sidebar',
     'LABEL_FOR_IS_CONTENT_MODULE_MODULE_FORM' => 'Is a content module',
     'LABEL_FOR_ONLY_SUPER_ADMIN_MODULE_FORM' => 'Only super admin',
+    'LABEL_FOR_DEFAULT_APP_MODULE_FORM' => 'Default module for app',
     //String for module Company
     'HEADER_TABLE_FOR_NAME_IN_COMPANIES' => 'Name',
     'HEADER_TABLE_FOR_EMAIL_IN_COMPANIES' => 'Email',
@@ -97,4 +103,6 @@ return [
     'MESSAGE_SUCCESS_CREATE_NEWS' => 'New Created',
     'TITLE_EDIT_NEWS_PAGE' => 'Edit New',
     'MESSAGE_SUCCESS_EDIT_NEWS' => 'New edited',
+    //Strings for Roles module
+    'TITLE_CREATE_PAGE_NEWS' => 'Create Role',
 ];
