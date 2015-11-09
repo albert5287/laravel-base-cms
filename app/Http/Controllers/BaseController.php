@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\URL;
 use Maatwebsite\Excel\Facades\Excel;
 use yajra\Datatables\Facades\Datatables;
 
-class BaseController extends Controller
+abstract class BaseController extends Controller
 {
     /**
      * The Module type.
@@ -33,6 +33,7 @@ class BaseController extends Controller
      * false by default.
      */
     protected $exportButton = false;
+    //TODO:TO DELETE
     /**
      * Variable to set the collection that
      * is going to be show in the table
@@ -40,7 +41,7 @@ class BaseController extends Controller
      * To setup the collection, the collection has to
      * be set up in the constructor
      */
-    protected $customCollection = null;
+    protected $customCollection = false;
     /**
      * Variable to set the collection that
      * is going to be show in the table
@@ -205,12 +206,10 @@ class BaseController extends Controller
      * @param $module_application_id
      * @return mixed
      */
-    private function getElements($module_application_id)
+    private function getElements($module_application_id = 0)
     {
-
-
-        if ($this->customCollection !== null) {
-            $elements = $this->customCollection;
+        if (method_exists($this ,'getCustomCollection')) {
+            $elements = $this->getCustomCollection();
         } else {
             $className = "App\\" . $this->className;
             $model = new $className;
@@ -221,9 +220,8 @@ class BaseController extends Controller
             if (!empty($usedTraits = class_uses($model)) && isset($usedTraits['Dimsav\Translatable\Translatable'])) {
                 $elements = $elements->withTranslation();
             }
-            $elements = $elements->get();
         }
-        return $elements;
+        return $elements->get();
     }
 
     //TODO: TO DELETE
@@ -320,7 +318,6 @@ class BaseController extends Controller
      */
     private function editButton($elements, $module_application_id = 0)
     {
-        //dd($module_application_id);
         $editButton = '';
         if($this->editButton){
             $urlParams = [$elements->id];

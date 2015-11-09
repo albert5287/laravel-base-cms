@@ -20,9 +20,6 @@ class ModuleApplicationController extends BaseController
      */
     public function __construct(){
         $this->module = $this->getModule();
-        $this->customCollection = ModuleApplication::withTranslation()
-                                    ->where('application_id', '=', Session::get('currentApp')->id)
-                                    ->get();
         $this->middleware('auth');
     }
 
@@ -125,5 +122,11 @@ class ModuleApplicationController extends BaseController
     private function getListAvailableContentModules()
     {
         return ['' => ''] + Session::get('currentApp')->availableModules()->get()->lists('title', 'id')->all();
+    }
+
+    protected function getCustomCollection()
+    {
+        return ModuleApplication::withTranslation()
+            ->where('application_id', '=', Session::get('currentApp')->id);
     }
 }

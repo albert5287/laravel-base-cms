@@ -25,7 +25,6 @@ class UserController extends BaseController
         $urlParameters = Route::current()->parameters();
         $this->application = Application::find($urlParameters['app_id']);
         $this->module = $this->getModule();
-        $this->customCollection = $this->application->users;
         $this->middleware('auth');
     }
 
@@ -69,5 +68,13 @@ class UserController extends BaseController
             ->where('level', '<=', Auth::user()->level())
             ->get()
             ->lists('name', 'id');
+    }
+
+    /**function to get a custom collection
+     * @return mixed
+     */
+    protected function getCustomCollection()
+    {
+        return $this->application->users();
     }
 }

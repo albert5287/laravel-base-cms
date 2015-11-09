@@ -29,8 +29,6 @@ class RoleController extends BaseController
             $this->application = Application::find($urlParameters['app_id']); //set the application
             $this->module = $this->getModule();
             $this->customUrlEditParameters = [$urlParameters['app_id']];
-            $this->customCollection = $this->application->roles()->where('slug', '<>',
-                $urlParameters['app_id'] . '.admin')->get();
         }
         $this->middleware('auth');
     }
@@ -180,6 +178,15 @@ class RoleController extends BaseController
             ]);
             $role->attachPermission($permission);
         }
+    }
+
+    /** function to get a custom collection
+     * @return mixed
+     */
+    protected function getCustomCollection()
+    {
+        return $this->application->roles()->where('slug', '<>',
+            $this->application->id . '.admin');
     }
 
 }
