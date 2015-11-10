@@ -35,13 +35,26 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      */
     protected $hidden = ['password', 'remember_token'];
 
-
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function applications(){
-        return $this->belongsToMany('App\Application');
+        return $this->belongsToMany('App\Application')->withTimestamps();
     }
+
+    /**
+     * function to get the users role by app
+     * @param int $app_id
+     * @param string $operator
+     * @return
+     */
+    public function getRolesByApp($app_id, $operator = '='){
+        return $this
+                ->roles()
+                ->join('application_role', 'roles.id', $operator, 'application_role.role_id')
+                ->where('application_role.application_id', '=', $app_id)->get();
+    }
+
 
     /**function to check if 2 users are the same
      * @param User $user
@@ -50,6 +63,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function isEqual(User $user){
         return $this->id === $user->id;
     }
+
+
 
 
 }

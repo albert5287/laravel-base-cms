@@ -108,4 +108,8 @@ return [
     'TITLE_CREATE_PAGE_ROLE' => 'Create Role',
     //Strings for Users module
     'TITLE_CREATE_PAGE_USER' => 'Create user',
+    'MESSAGE_INFO_USER_EXIST_ALREADY' => 'User already exists, and have been linked to this app',
+    'MESSAGE_SUCCESS_DELETE_USER' => 'User deleted',
+    'MESSAGE_USER_UNLINK_TO_APP' => 'The user is linked to another apps, so it has not been deleted. But it has been unliked to the app'
+
 ];

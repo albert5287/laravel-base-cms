@@ -65,12 +65,12 @@ Route::get('change-current-app/{appId}', 'HomeController@changeCurrentApp');
 //create routes for the active modules
 //users
 Route::any('apps/users/{app_id}/data', 'UserController@data');
-Route::post('apps/users', 'UserController@store');
+Route::post('users/{app_id}', 'UserController@store');
 Route::get('apps/users/{app_id}', 'UserController@index'); //list of a content module
 Route::get('apps/users/create/{app_id}', 'UserController@create');
 Route::get('apps/users/{users}/edit/{app_id}', 'UserController@edit');
-Route::delete('apps/users/{users}', 'UserController@destroy');
-Route::match(['put', 'patch'], 'apps/users/{users}', 'UserController@update');
+Route::delete('apps/users/{users}/{app_id}', 'UserController@destroy');
+Route::match(['put', 'patch'], 'apps/users/{users}/{app_id}', 'UserController@update');
 //roles
 Route::any('apps/roles/{app_id}/data', 'RoleController@data');
 Route::post('roles/{app_id}', 'RoleController@store');

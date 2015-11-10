@@ -43,13 +43,15 @@ abstract class BaseController extends Controller
      */
     protected $customCollection = false;
     /**
-     * Variable to set the collection that
-     * is going to be show in the table
-     * NULL by default.
-     * To setup the collection, the collection has to
-     * be set up in the constructor
+     * variable to set and additional parameter
+     * to be sent on the edit button
      */
     protected $customUrlEditParameters = null;
+    /**
+     * variable to set and additional parameter
+     * to be sent on the delete button
+     */
+    protected $customUrlDeleteParameters = null;
 
 
     /**
@@ -296,7 +298,9 @@ abstract class BaseController extends Controller
     {
         $deleteButton = '';
         if($this->deleteButton){
-            $url = action($this->className . 'Controller@destroy', [$element->id]);
+            $urlParams = [$element->id];
+            $urlParams = $this->customUrlDeleteParameters === null ? $urlParams : array_merge($urlParams, $this->customUrlDeleteParameters);
+            $url = action($this->className . 'Controller@destroy', $urlParams);
             $deleteButton = '<form method="POST" action="'.$url.'" accept-charset="UTF-8" id="deleteForm_'.$element->id.'">
                                 <input name="_method" type="hidden" value="DELETE">
                                 <input name="_token" type="hidden" value="'.csrf_token().'">

@@ -21,8 +21,8 @@ class HomeController extends BaseController
      */
     public function index()
     {
-        $page_title = 'Home';
-        return view('home', compact('page_title'));
+        $pageTitle = 'Home';
+        return view('home', compact('pageTitle'));
     }
 
     /**

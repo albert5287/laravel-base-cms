@@ -95,7 +95,6 @@ class RoleController extends BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     *
      * @param $role_id
      * @param $app_id
      * @return Response
