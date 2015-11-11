@@ -25,6 +25,7 @@ class UserController extends BaseController
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        parent::__construct();
         $urlParameters = Route::current()->parameters();
         $this->application = Application::find($urlParameters['app_id']);
         $this->module = $this->getModule();
@@ -145,13 +146,15 @@ class UserController extends BaseController
             if($data['password'] === ''){
                 unset($data['password']);
             }
+            else{
+                $data['password'] = bcrypt($data['password']);
+            }
             $user->update($data);
             //get user's roles from other apps
             $roles = $user
                 ->getRolesByApp($app_id, '<>')
                 ->lists('id')
                 ->toArray();
-
             $this->syncUserRoles($user, $roles, $data['roleList']);
 
             flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
@@ -225,7 +228,9 @@ class UserController extends BaseController
      */
     protected function getCustomCollection()
     {
-        return $this->application->users();
+        return $this->application
+            ->users()
+            ->get();
     }
 
     /**

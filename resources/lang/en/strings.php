@@ -34,6 +34,7 @@ return [
     'LABEL_SHOW' => 'Show',
     'LABEL_CREATE' => 'Create',
     'LABEL_DELETE' => 'Delete',
+    'LABEL_EDIT' => 'Edit',
     'LABEL_PERMISSIONS' => 'Permissions',
     'LABEL_PASSWORD' => 'Pasword',
     //strings for module Languages

@@ -18,6 +18,7 @@ class CompanyController extends BaseController
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        parent::__construct();
         $this->module = $this->getModule();
         $this->middleware('auth');
     }

@@ -16,40 +16,44 @@ use Illuminate\Support\Facades\Auth;
 //TODO
 //filter by active languages
 //maybe change to the model
-function getActiveLanguages(){
+function getActiveLanguages()
+{
     return Language::withTranslation()->get();
 }
+
 //TODO
 //filter by active Modules
 //maybe change to the model
 /**
  * @return mixed
  */
-function getAvailableModulesForAUser($user){
+function getAvailableModulesForAUser($user)
+{
     $modules = Module::where('enabled', '=', true)
         ->where('show_sidebar', '=', true);
-    if(!($user->is('super.admin'))){
+    if (!($user->is('super.admin'))) {
         $modules->where('only_super_admin', '=', false);
     }
     return $modules->withTranslation()->get();
 }
 
-function getAllActiveModules(){
+function getAllActiveModules()
+{
     return Module::where('enabled', '=', true)->withTranslation()->get();
 }
 
 //TODO: maybe change this to a base model and extend that model
-function insertUpdateMultiLanguage($element, $newValues){
-    foreach($newValues as $key => $value){
-        if(strpos($key, '_') !== 0){
-            if(is_array($value)){
-                foreach($value as $lang => $val){
-                    if($val !== ''){
+function insertUpdateMultiLanguage($element, $newValues)
+{
+    foreach ($newValues as $key => $value) {
+        if (strpos($key, '_') !== 0) {
+            if (is_array($value)) {
+                foreach ($value as $lang => $val) {
+                    if ($val !== '') {
                         $element->translateOrNew($lang)->$key = $val;
                     }
                 }
-            }
-            else{
+            } else {
                 $element->$key = $value;
             }
         }
@@ -57,20 +61,20 @@ function insertUpdateMultiLanguage($element, $newValues){
     $element->save();
 }
 
-function getAvailableApps(){
-    if(Session::has('availableApps')){
+function getAvailableApps()
+{
+    if (Session::has('availableApps')) {
         return Session::get('availableApps');
-    }
-    else{
+    } else {
         return getAvailableAppsForOneUser();
     }
 }
 
-function getAvailableUsers(){
-    if(Session::has('availableUsers')){
+function getAvailableUsers()
+{
+    if (Session::has('availableUsers')) {
         return Session::get('availableUsers');
-    }
-    else{
+    } else {
         return availableUsers();
     }
 }
@@ -80,12 +84,15 @@ function getAvailableUsers(){
  * and put them in the session
  * @return mixed
  */
-function getAvailableAppsForOneUser(){
-    if(Auth::check() && Auth::user()->is('super.admin')){
+function getAvailableAppsForOneUser($user)
+{
+    if ($user->is('super.admin')) {
         $availableApps = Application::orderBy('name')->get();
-        Session::put('availableApps', $availableApps);
-        return $availableApps;
+    } else {
+        $availableApps = $user->applications;
     }
+    Session::put('availableApps', $availableApps);
+    return $availableApps;
 }
 
 //TODO: now is only for the super admin, complete for all kind of users
@@ -93,14 +100,55 @@ function getAvailableAppsForOneUser(){
  * and put them in the session
  * @return mixed
  */
-function availableUsers(){
-    if(Auth::check() && Auth::user()->is('super.admin')){
+function availableUsers()
+{
+    $availableUsers = [];
+    if (Auth::check() && Auth::user()->is('super.admin')) {
         $availableUsers = User::where('id', '<>', Auth::user()->id)->get();
-        Session::put('availableUsers', $availableUsers);
-        return $availableUsers;
     }
+    Session::put('availableUsers', $availableUsers);
+    return $availableUsers;
 }
 
-function getContentModulesForCurrentApp(){
+/**
+ * @return mixed
+ */
+function getContentModulesForCurrentApp()
+{
     return ModuleApplication::getModulesApp(Session::get('currentApp')->id)->get();
 }
+
+/**
+ * check if user have a permission in a class
+ * @param $type
+ * @param $className
+ * @return bool
+ */
+function checkIfUserHavePermissions($type, $className){
+    return (Auth::user()->is('super.admin')
+        || Auth::user()->is(Session::get('currentApp')->id.'.admin')
+        || Auth::user()->can($type.'.'.Session::get('currentApp')->id.'.'.strtolower($className)));
+}
+
+/**
+ * function to check if a user if valid for showing the add button in a specific class
+ * @param $className
+ * @return bool
+ */
+function checkIfUserIsValidForAddButton($className)
+{
+    return ($className === 'Application' && Auth::user()->is('super.admin'))
+            || ($className !== 'Application' && (checkIfUserHavePermissions('create', $className)));
+}
+
+/**
+ * function to check if a user if valid for showing the delete button in a specific class
+ * @param $className
+ * @return bool
+ */
+function checkIfUserIsValidForDeleteButton($className)
+{
+    return ($className === 'Application' && Auth::user()->is('super.admin'))
+        || ($className !== 'Application' && (checkIfUserHavePermissions('delete', $className)));
+}
+

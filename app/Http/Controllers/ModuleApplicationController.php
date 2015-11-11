@@ -19,6 +19,7 @@ class ModuleApplicationController extends BaseController
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        parent::__construct();
         $this->module = $this->getModule();
         $this->middleware('auth');
     }
@@ -127,6 +128,7 @@ class ModuleApplicationController extends BaseController
     protected function getCustomCollection()
     {
         return ModuleApplication::withTranslation()
-            ->where('application_id', '=', Session::get('currentApp')->id);
+            ->where('application_id', '=', Session::get('currentApp')->id)
+            ->get();
     }
 }

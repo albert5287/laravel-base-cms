@@ -8,8 +8,10 @@ use App\Module;
 use Bican\Roles\Models\Permission;
 use Bican\Roles\Models\Role;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 
 class RoleController extends BaseController
@@ -24,6 +26,7 @@ class RoleController extends BaseController
      */
     public function __construct()
     {
+        parent::__construct();
         $urlParameters = Route::current()->parameters(); //get the app_id from the url
         if(isset($urlParameters['app_id'])) {
             $this->application = Application::find($urlParameters['app_id']); //set the application
@@ -159,7 +162,9 @@ class RoleController extends BaseController
      */
     private function getModulesApplication()
     {
-        return $this->application->availableModules->merge(Module::defaultAppModules()->get());
+        return $this->application
+            ->availableModules
+            ->merge(Module::defaultAppModules()->get());
     }
 
     /**
@@ -184,8 +189,10 @@ class RoleController extends BaseController
      */
     protected function getCustomCollection()
     {
-        return $this->application->roles()->where('slug', '<>',
-            $this->application->id . '.admin');
+        return $this->application
+            ->roles()
+            ->where('slug', '<>', $this->application->id . '.admin')
+            ->get();
     }
 
 }

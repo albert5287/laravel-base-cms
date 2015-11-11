@@ -38,6 +38,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $e)
     {
+        if ($e instanceof \Bican\Roles\Exceptions\PermissionDeniedException) {
+            // you can for example flash message, redirect...
+            return redirect('home');
+        }
         return parent::render($request, $e);
     }
 }

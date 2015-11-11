@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Module;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\URL;
@@ -52,6 +53,21 @@ abstract class BaseController extends Controller
      * to be sent on the delete button
      */
     protected $customUrlDeleteParameters = null;
+
+    /**
+     * Constructor.
+     *
+     * check the authentication for every method in this controller
+     */
+    public function __construct()
+    {
+        if(Auth::check() && !(Auth::user()->is('super.admin') || Auth::user()->is(Session::get('currentApp')->id.'.admin'))){
+            $this->middleware('permission:show.'.Session::get('currentApp')->id.'.'.strtolower($this->className));
+            $this->middleware('permission:edit.'.Session::get('currentApp')->id.'.'.strtolower($this->className), ['only' => ['update']]);
+            $this->middleware('permission:create.'.Session::get('currentApp')->id.'.'.strtolower($this->className), ['only' => ['store']]);
+            $this->middleware('permission:delete.'.Session::get('currentApp')->id.'.'.strtolower($this->className), ['only' => ['destroy']]);
+        }
+    }
 
 
     /**
@@ -222,8 +238,9 @@ abstract class BaseController extends Controller
             if (!empty($usedTraits = class_uses($model)) && isset($usedTraits['Dimsav\Translatable\Translatable'])) {
                 $elements = $elements->withTranslation();
             }
+            $elements = $elements->get();
         }
-        return $elements->get();
+        return $elements;
     }
 
     //TODO: TO DELETE
@@ -297,20 +314,22 @@ abstract class BaseController extends Controller
     private function deleteButton($element)
     {
         $deleteButton = '';
-        if($this->deleteButton){
-            $urlParams = [$element->id];
-            $urlParams = $this->customUrlDeleteParameters === null ? $urlParams : array_merge($urlParams, $this->customUrlDeleteParameters);
-            $url = action($this->className . 'Controller@destroy', $urlParams);
-            $deleteButton = '<form method="POST" action="'.$url.'" accept-charset="UTF-8" id="deleteForm_'.$element->id.'">
-                                <input name="_method" type="hidden" value="DELETE">
-                                <input name="_token" type="hidden" value="'.csrf_token().'">
-                                <button type="button" class="btn btn-danger qs" data-toggle="modal" data-target="#modal"
-                                    data-title="L&ouml;schen?" data-body="M&ouml;chten Sie den Eintrag wirklich l&ouml;schen?"
-                                    data-btnconfirm="L&ouml;schen" data-form="deleteForm_'.$element->id.'"
-                                    data-elementid="'.$element->id.'">
-                                    <i class="fa fa-trash"></i><span class="popover above">l&ouml;schen</span>
-                                </button>
-                            </form>';
+        if(checkIfUserIsValidForDeleteButton($this->className)){
+            if($this->deleteButton){
+                $urlParams = [$element->id];
+                $urlParams = $this->customUrlDeleteParameters === null ? $urlParams : array_merge($urlParams, $this->customUrlDeleteParameters);
+                $url = action($this->className . 'Controller@destroy', $urlParams);
+                $deleteButton = '<form method="POST" action="'.$url.'" accept-charset="UTF-8" id="deleteForm_'.$element->id.'">
+                                    <input name="_method" type="hidden" value="DELETE">
+                                    <input name="_token" type="hidden" value="'.csrf_token().'">
+                                    <button type="button" class="btn btn-danger qs" data-toggle="modal" data-target="#modal"
+                                        data-title="L&ouml;schen?" data-body="M&ouml;chten Sie den Eintrag wirklich l&ouml;schen?"
+                                        data-btnconfirm="L&ouml;schen" data-form="deleteForm_'.$element->id.'"
+                                        data-elementid="'.$element->id.'">
+                                        <i class="fa fa-trash"></i><span class="popover above">l&ouml;schen</span>
+                                    </button>
+                                </form>';
+            }
         }
         return $deleteButton;
 
@@ -323,21 +342,23 @@ abstract class BaseController extends Controller
     private function editButton($elements, $module_application_id = 0)
     {
         $editButton = '';
-        if($this->editButton){
-            $urlParams = [$elements->id];
-            if($this->customUrlEditParameters === null) {
-                if($module_application_id !== 0) {
-                    $urlParams[] = $this->module;
+        if(checkIfUserHavePermissions('edit', $this->className)){
+            if($this->editButton){
+                $urlParams = [$elements->id];
+                if($this->customUrlEditParameters === null) {
+                    if($module_application_id !== 0) {
+                        $urlParams[] = $this->module;
+                    }
                 }
-            }
-            else{
-                $urlParams = array_merge($urlParams, $this->customUrlEditParameters);
-            }
-            $url = action($this->className . 'Controller@edit',$urlParams);
-            $editButton = '<a href="'.$url.'" class="btn btn-info pull-left qs" style="margin-right: 3px;">
+                else{
+                    $urlParams = array_merge($urlParams, $this->customUrlEditParameters);
+                }
+                $url = action($this->className . 'Controller@edit',$urlParams);
+                $editButton = '<a href="'.$url.'" class="btn btn-info pull-left qs" style="margin-right: 3px;">
                                 <i class="fa fa-edit"></i>
                                 <span class="popover above">bearbeiten</span>
                             </a>';
+            }
         }
         return $editButton;
     }

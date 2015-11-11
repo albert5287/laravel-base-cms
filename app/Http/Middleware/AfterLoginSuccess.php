@@ -20,13 +20,17 @@ class AfterLoginSuccess
     public function handle($request, Closure $next)
     {
         $response = $next($request);
-        if(Auth::check() && Auth::user()->is('super.admin')){
-            $availableApps = getAvailableAppsForOneUser();
-            availableUsers();
+        if(Auth::check()){
+            $user = Auth::user();
+            $availableApps = getAvailableAppsForOneUser($user);
+            if($user->is('super.admin')){
+                availableUsers();
+            }
+            if($availableApps->count() > 0){
+                Session::put('currentApp', $availableApps[0]);
+            }
         }
-        if(sizeof($availableApps) > 0){
-            Session::put('currentApp', $availableApps[0]);
-        }
+
         //TODO:get data when user is not superAdmin
         return $response;
     }

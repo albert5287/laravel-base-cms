@@ -27,7 +27,7 @@
                         </th>
                         <th>
                             <input type="checkbox" id="edit" class="headerPermissions">
-                            <label for="edit">{{trans('strings.LABEL_MODULES')}}</label>
+                            <label for="edit">{{trans('strings.LABEL_EDIT')}}</label>
                         </th>
                         <th>
                             <input type="checkbox" id="delete" class="headerPermissions">
@@ -42,10 +42,16 @@
                             </td>
                             <td>{!! Form::checkbox('permissions[show.'.$app_id.'.'.$module->class.']', 1, in_array('show.'.$app_id.'.'.$module->class, $arrayPermissions)) !!}</td>
                             <td>
-                                {!! Form::checkbox('permissions[create.'.$app_id.'.'.$module->class.']', 1, in_array('create.'.$app_id.'.'.$module->class, $arrayPermissions)) !!}
+                                @if($module->class !== 'Application')
+                                    {!! Form::checkbox('permissions[create.'.$app_id.'.'.$module->class.']', 1, in_array('create.'.$app_id.'.'.$module->class, $arrayPermissions)) !!}
+                                @endif
                             </td>
                             <td>{!! Form::checkbox('permissions[edit.'.$app_id.'.'.$module->class.']', 1, in_array('edit.'.$app_id.'.'.$module->class, $arrayPermissions)) !!}</td>
-                            <td>{!! Form::checkbox('permissions[delete.'.$app_id.'.'.$module->class.']', 1, in_array('delete.'.$app_id.'.'.$module->class, $arrayPermissions)) !!}</td>
+                            <td>
+                                @if($module->class !== 'Application')
+                                    {!! Form::checkbox('permissions[delete.'.$app_id.'.'.$module->class.']', 1, in_array('delete.'.$app_id.'.'.$module->class, $arrayPermissions)) !!}
+                                @endif
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

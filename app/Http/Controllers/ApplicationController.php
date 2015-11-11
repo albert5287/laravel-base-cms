@@ -7,6 +7,7 @@ use App\Company;
 use App\Http\Requests\ApplicationRequest;
 use App\Module;
 use App\Http\Requests;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 class ApplicationController extends BaseController
@@ -18,6 +19,7 @@ class ApplicationController extends BaseController
      * check the authentication for every method in this controller
      */
     public function __construct(){
+        parent::__construct();
         $this->module = $this->getModule();
         $this->middleware('auth');
     }
@@ -160,6 +162,23 @@ class ApplicationController extends BaseController
     private function getListActiveContentModules()
     {
         return Module::activeContentModules()->get()->lists('title', 'id');
+    }
+
+    /**
+     * function to get a custom collection of users
+     * @return mixed
+     */
+    protected function getCustomCollection()
+    {
+        $user = Auth::user();
+        //if user is super admin get all the apps
+        if($user->is('super.admin')){
+            return Application::all();
+        }
+        //if not get only the current app
+        else{
+            return collect([Session::get('currentApp')]);
+        }
     }
 
 

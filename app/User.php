@@ -51,8 +51,8 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
     public function getRolesByApp($app_id, $operator = '='){
         return $this
                 ->roles()
-                ->join('application_role', 'roles.id', $operator, 'application_role.role_id')
-                ->where('application_role.application_id', '=', $app_id)->get();
+                ->join('application_role', 'roles.id', '=', 'application_role.role_id')
+                ->where('application_role.application_id', $operator, $app_id)->get();
     }
 
 

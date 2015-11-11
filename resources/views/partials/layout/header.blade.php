@@ -11,9 +11,7 @@
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-                @role('super.admin')
-                    @include('partials.layout.dropdownApps')
-                @endrole
+                @include('partials.layout.dropdownApps')
                 @include('partials.layout.dropdownUsers')
             </ul>
         </div>
