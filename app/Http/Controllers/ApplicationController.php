@@ -7,7 +7,9 @@ use App\Company;
 use App\Http\Requests\ApplicationRequest;
 use App\Module;
 use App\Http\Requests;
+use Bican\Roles\Models\Role;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class ApplicationController extends BaseController
@@ -63,12 +65,23 @@ class ApplicationController extends BaseController
     public function store(ApplicationRequest $request)
     {
         $application = new Application();
-
-        $this->insertUpdateApplication($application, $request);
-
-        Session::forget('availableApps');
-
-        flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_COMPANY'));
+        DB::beginTransaction();
+        try {
+            $this->insertUpdateApplication($application, $request);
+            //create admin role for the app
+            $role = Role::create([
+                'name' => 'Admin',
+                'slug' => $application->id . '.' . 'admin'
+            ]);
+            $application->roles()->attach($role);
+            Session::forget('availableApps');
+            flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_COMPANY'));
+            DB::commit();
+        } catch (\Exception $e) {
+            flash()->success(trans('strings.MESSAGE_ERROR'));
+            DB::rollback();
+            // something went wrong
+        }
 
         return redirect('apps');
     }

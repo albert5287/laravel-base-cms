@@ -66,7 +66,7 @@ function getAvailableApps()
     if (Session::has('availableApps')) {
         return Session::get('availableApps');
     } else {
-        return getAvailableAppsForOneUser();
+        return getAvailableAppsForOneUser(Auth::user());
     }
 }
 
