@@ -17,6 +17,7 @@ elixir(function(mix) {
     ], 'resources/assets/css')
         .styles([
             'app.css',
+            'font-awesome.min.css',
             'styles.css',
             'vendor/bootstrap.css',
             'vendor/nestedSortable.css',
