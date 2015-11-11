@@ -30,7 +30,6 @@ class RoleController extends BaseController
         $urlParameters = Route::current()->parameters(); //get the app_id from the url
         if(isset($urlParameters['app_id'])) {
             $this->application = Application::find($urlParameters['app_id']); //set the application
-            $this->module = $this->getModule();
             $this->customUrlEditParameters = [$urlParameters['app_id']];
         }
         $this->middleware('auth');

@@ -22,7 +22,6 @@ class ApplicationController extends BaseController
      */
     public function __construct(){
         parent::__construct();
-        $this->module = $this->getModule();
         $this->middleware('auth');
     }
 

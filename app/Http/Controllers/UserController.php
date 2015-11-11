@@ -28,7 +28,6 @@ class UserController extends BaseController
         parent::__construct();
         $urlParameters = Route::current()->parameters();
         $this->application = Application::find($urlParameters['app_id']);
-        $this->module = $this->getModule();
         $this->customUrlEditParameters = [$urlParameters['app_id']];
         $this->customUrlDeleteParameters = [$urlParameters['app_id']];
         $this->middleware('auth');
