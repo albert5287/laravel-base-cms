@@ -283,6 +283,7 @@ abstract class BaseController extends Controller
     }
 
     /**
+     * function to get the module
      * @return mixed
      */
     protected function getModule()
@@ -291,6 +292,7 @@ abstract class BaseController extends Controller
     }
 
     /**
+     * function to get the data for the datatable
      * Process datatables ajax request.
      *
      * @return \Illuminate\Http\JsonResponse
@@ -308,6 +310,7 @@ abstract class BaseController extends Controller
     }
 
     /**
+     * function to create the delete button
      * @param $element
      * @return string
      */
@@ -336,6 +339,7 @@ abstract class BaseController extends Controller
     }
 
     /**
+     * function to create the edi button
      * @param $elements
      * @return string
      */
