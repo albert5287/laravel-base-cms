@@ -61,6 +61,7 @@ Route::post('password/reset', [
 ]);
 
 Route::get('change-current-app/{appId}', 'HomeController@changeCurrentApp');
+Route::get('change-user/{user}', 'HomeController@changeUser');
 
 //create routes for the active modules
 //users

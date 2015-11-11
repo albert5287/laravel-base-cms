@@ -14,7 +14,7 @@
                         <ul class="menu">
             @endif
                             <li><!-- start message -->
-                                <a href="#">
+                                <a href="{{action('HomeController@changeUser', [$user])}}">
                                     <h4>
                                         <span class="fa fa-user"></span> {{$user->name}}
                                     </h4>

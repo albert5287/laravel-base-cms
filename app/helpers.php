@@ -104,7 +104,13 @@ function availableUsers()
 {
     $availableUsers = [];
     if (Auth::check() && Auth::user()->is('super.admin')) {
-        $availableUsers = User::where('id', '<>', Auth::user()->id)->get();
+        $availableUsers = Session::get('currentApp')
+            ->users()
+            ->where('user_id', '<>', Auth::user()->id)
+            ->get();
+    }
+    if(Session::has('originalUser')){
+        $availableUsers[] = Session::get('originalUser');
     }
     Session::put('availableUsers', $availableUsers);
     return $availableUsers;
