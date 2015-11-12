@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Repositories\ModuleRepository;
 use App\Http\Requests\ModuleRequest;
 use App\Module;
 use Illuminate\Http\Request;
@@ -12,13 +13,20 @@ class ModuleController extends BaseController
 {
     protected $className = 'Module';
     /**
+     * @var ModuleRepository
+     */
+    protected $moduleRepository;
+
+    /**
      * Constructor.
      *
      * check the authentication for every method in this controller
+     * @param ModuleRepository $moduleRepository
      */
-    public function __construct(){
+    public function __construct(ModuleRepository $moduleRepository){
         parent::__construct();
         $this->middleware('auth');
+        $this->moduleRepository = $moduleRepository;
     }
 
     /**
@@ -52,15 +60,14 @@ class ModuleController extends BaseController
     /**
      * Store a newly created resource in storage.
      *
+     * @param ModuleRequest $request
      * @return Response
      */
     public function store(ModuleRequest $request)
     {
         $module = new Module();
-        insertUpdateMultiLanguage($module, $request->all());
-
+        $this->moduleRepository->insertUpdateMultiLanguage($module, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
-
         return redirect('modules');
     }
 
@@ -73,7 +80,6 @@ class ModuleController extends BaseController
     public function edit(Module $module)
     {
         $this->setReturnUrl();
-
         $pageTitle = trans('strings.TITLE_EDIT_MODULE_PAGE');
         return view('module.edit', compact('module', 'pageTitle'));
     }
@@ -86,10 +92,8 @@ class ModuleController extends BaseController
      */
     public function update(Module $module, ModuleRequest $request)
     {
-        insertUpdateMultiLanguage($module, $request->all());
-
+        $this->moduleRepository->insertUpdateMultiLanguage($module, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_LANGUAGE'));
-
         return $this->redirectPreviousUrl('modules');
     }
 
@@ -102,11 +106,8 @@ class ModuleController extends BaseController
     public function destroy(Module $module)
     {
         $this->setReturnUrl();
-
-        $module->delete();
-
+        $this->moduleRepository->delete($module);
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_MODULE'));
-
         return $this->redirectPreviousUrl('modules');
     }
 }

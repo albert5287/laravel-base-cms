@@ -89,7 +89,7 @@ abstract class BaseController extends Controller
         //get search
         $search = Input::get('search');
         //get page
-        $page = Input::get('page') === null ? 0 : Input::get('order');;
+        $page = Input::get('page') === null ? 0 : Input::get('page');;
 
         $class_name = $this->className;
 

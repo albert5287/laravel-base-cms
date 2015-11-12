@@ -23,11 +23,11 @@ class AfterLoginSuccess
         if(Auth::check()){
             $user = Auth::user();
             $availableApps = getAvailableAppsForOneUser($user);
-            if($user->is('super.admin')){
-                availableUsers();
-            }
             if($availableApps->count() > 0){
                 Session::put('currentApp', $availableApps[0]);
+            }
+            if($user->is('super.admin')){
+                availableUsers();
             }
         }
 
