@@ -15,4 +15,11 @@ class ModuleRepository extends DbRepository
     function __construct(Module $model){
         $this->model = $model;
     }
+
+    public function getListActiveContentModules(){
+        return $this->model
+            ->activeContentModules()
+            ->get()
+            ->lists('title', 'id');
+    }
 }

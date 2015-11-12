@@ -43,6 +43,19 @@ abstract class DbRepository
         return $entity;
     }
 
+    public function all(){
+        return $this->model->all();
+    }
+
+    /**
+     * @param $column
+     * @param null $key
+     * @return mixed
+     */
+    public function lists($column, $key = null){
+        return $this->model->lists($column, $key);
+    }
+
     /**
      * function to insert or update a model in different languages
      * @param $entity

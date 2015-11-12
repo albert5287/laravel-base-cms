@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Repositories\ApplicationRepository;
+use Acme\Repositories\CompanyRepository;
+use Acme\Repositories\ModuleRepository;
+use Acme\Repositories\RoleRepository;
 use App\Application;
 use App\Company;
 use App\Http\Requests\ApplicationRequest;
@@ -15,14 +19,32 @@ use Illuminate\Support\Facades\Session;
 class ApplicationController extends BaseController
 {
     protected $className = 'Application';
+    protected $applicationRepository;
+    protected $companyRepository;
+    protected $moduleRepository;
+    protected $roleRepository;
+
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
+     * @param ApplicationRepository $applicationRepository
+     * @param CompanyRepository $companyRepository
+     * @param ModuleRepository $moduleRepository
+     * @param RoleRepository $roleRepository
      */
-    public function __construct(){
+    public function __construct(
+        ApplicationRepository $applicationRepository,
+        CompanyRepository $companyRepository,
+        ModuleRepository $moduleRepository,
+        RoleRepository $roleRepository
+    ) {
         parent::__construct();
         $this->middleware('auth');
+        $this->applicationRepository = $applicationRepository;
+        $this->companyRepository = $companyRepository;
+        $this->moduleRepository = $moduleRepository;
+        $this->roleRepository = $roleRepository;
     }
 
     /**
@@ -33,9 +55,7 @@ class ApplicationController extends BaseController
     public function index()
     {
         $pageTitle = $this->module->title;
-
         $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_APPLICATIONS')];
-
         return $this->setupTable($pageTitle, $headerTable);
     }
 
@@ -47,11 +67,8 @@ class ApplicationController extends BaseController
     public function create()
     {
         $pageTitle = trans('strings.TITLE_CREATE_APPLICATION_PAGE');
-
-        $companies = ['' => ''] + Company::lists('name', 'id')->all();
-
-        $modules = $this->getListActiveContentModules();
-
+        $companies = $this->companyRepository->getCompanyList();
+        $modules = $this->moduleRepository->getListActiveContentModules();
         return view('application.create', compact('pageTitle', 'companies', 'modules'));
     }
 
@@ -66,13 +83,14 @@ class ApplicationController extends BaseController
         $application = new Application();
         DB::beginTransaction();
         try {
-            $this->insertUpdateApplication($application, $request);
+            $this->applicationRepository->insertUpdateApplication($application, $request);
             //create admin role for the app
-            $role = Role::create([
+            $role = $this->roleRepository->create([
                 'name' => 'Admin',
                 'slug' => $application->id . '.' . 'admin'
             ]);
-            $application->roles()->attach($role);
+            //attach role to company
+            $this->applicationRepository->attachRoles($application, $role);
             Session::forget('availableApps');
             flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_COMPANY'));
             DB::commit();
@@ -94,13 +112,9 @@ class ApplicationController extends BaseController
     public function edit(Application $application)
     {
         $this->setReturnUrl();
-
-        $companies = ['' => ''] + Company::lists('name', 'id')->all();
-
-        $modules = $this->getListActiveContentModules();
-
+        $companies = $this->companyRepository->getCompanyList();
+        $modules = $this->moduleRepository->getListActiveContentModules();
         $pageTitle = trans('strings.TITLE_EDIT_APPLICATION_PAGE');
-
         return view('application.edit', compact('application', 'pageTitle', 'companies', 'modules'));
     }
 
@@ -113,17 +127,12 @@ class ApplicationController extends BaseController
      */
     public function update(Application $application, ApplicationRequest $request)
     {
-
-        $this->insertUpdateApplication($application, $request);
-
+        $this->applicationRepository->insertUpdateApplication($application, $request);
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_COMPANY'));
-
         Session::forget('availableApps');
-
-        if(Session::has('currentApp') && Session::get('currentApp')->isEqual($application)){
+        if (Session::has('currentApp') && Session::get('currentApp')->isEqual($application)) {
             Session::put('currentApp', $application);
         }
-
         return $this->redirectPreviousUrl('companies');
     }
 
@@ -136,44 +145,10 @@ class ApplicationController extends BaseController
     public function destroy(application $application)
     {
         $this->setReturnUrl();
-
-        $application->delete();
-
+        $this->applicationRepository->delete($application);
         Session::forget('availableApps');
-
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_COMPANY'));
-
         return $this->redirectPreviousUrl('apps');
-    }
-
-    /**
-     * @param $application
-     * @param $request
-     */
-    private function insertUpdateApplication($application, $request)
-    {
-        insertUpdateMultiLanguage($application, $request->all());
-
-        $modulesToSync = NULL !== $request->input('_modules') ? $request->input('_modules') : [];
-
-        $this->insertUpdateAvailableModules($application, $modulesToSync);
-    }
-
-    /**
-     * @param $application
-     * @param $modules
-     */
-    private function insertUpdateAvailableModules($application, $modules)
-    {
-        $application->availableModules()->sync($modules);
-    }
-
-    /**get a list of the active content modules
-     * @return mixed
-     */
-    private function getListActiveContentModules()
-    {
-        return Module::activeContentModules()->get()->lists('title', 'id');
     }
 
     /**
@@ -182,14 +157,13 @@ class ApplicationController extends BaseController
      */
     protected function getCustomCollection()
     {
-        $user = Auth::user();
+        $user = getCurrentUser();
         //if user is super admin get all the apps
-        if($user->is('super.admin')){
-            return Application::all();
-        }
-        //if not get only the current app
-        else{
-            return collect([Session::get('currentApp')]);
+        if ($user->is('super.admin')) {
+            return $this->applicationRepository->all();
+        } //if not get only the current app
+        else {
+            return collect([getCurrentApp()]);
         }
     }
 

@@ -5,6 +5,7 @@ use App\Module;
 use App\ModuleApplication;
 use App\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 /**
  * Created by PhpStorm.
@@ -13,6 +14,13 @@ use Illuminate\Support\Facades\Auth;
  * Time: 16:35
  */
 
+function getCurrentUser(){
+    return Auth::user();
+}
+
+function getCurrentApp(){
+    return Session::get('currentApp');
+}
 //TODO
 //filter by active languages
 //maybe change to the model
