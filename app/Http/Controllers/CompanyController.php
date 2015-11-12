@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Repositories\CompanyRepository;
 use App\Company;
 use App\Http\Requests\CompanyRequest;
 use App\Module;
@@ -12,14 +13,18 @@ use App\Http\Controllers\Controller;
 class CompanyController extends BaseController
 {
     protected $className = 'Company';
+    private $companyRepository;
+
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
+     * @param CompanyRepository $companyRepository
      */
-    public function __construct(){
+    public function __construct(CompanyRepository $companyRepository){
         parent::__construct();
         $this->middleware('auth');
+        $this->companyRepository = $companyRepository;
     }
 
     /**
@@ -29,12 +34,9 @@ class CompanyController extends BaseController
      */
     public function index()
     {
-
         $pageTitle = $this->module->title;
-
         $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_COMPANIES'),
             'email' => trans('strings.HEADER_TABLE_FOR_EMAIL_IN_COMPANIES')];
-
         return $this->setupTable($pageTitle, $headerTable);
     }
 
@@ -46,7 +48,6 @@ class CompanyController extends BaseController
     public function create()
     {
         $pageTitle = trans('strings.TITLE_CREATE_COMPANY_PAGE');
-
         return view('company.create', compact('pageTitle'));
     }
 
@@ -58,11 +59,8 @@ class CompanyController extends BaseController
      */
     public function store(CompanyRequest $request)
     {
-        $company = new Company();
-        insertUpdateMultiLanguage($company, $request->all());
-
+        $this->companyRepository->create($request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_COMPANY'));
-
         return redirect('companies');
     }
 
@@ -75,7 +73,6 @@ class CompanyController extends BaseController
     public function edit(Company $company)
     {
         $this->setReturnUrl();
-
         $pageTitle = trans('strings.TITLE_EDIT_COMPANY_PAGE');
         return view('company.edit', compact('company', 'pageTitle'));
     }
@@ -89,10 +86,8 @@ class CompanyController extends BaseController
      */
     public function update(Company $company, CompanyRequest $request)
     {
-        insertUpdateMultiLanguage($company, $request->all());
-
+        $this->companyRepository->update($company, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_COMPANY'));
-
         return $this->redirectPreviousUrl('companies');
     }
 
@@ -105,11 +100,8 @@ class CompanyController extends BaseController
     public function destroy(Company $company)
     {
         $this->setReturnUrl();
-
-        $company->delete();
-
+        $this->companyRepository->delete($company);
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_COMPANY'));
-
         return $this->redirectPreviousUrl('companies');
     }
 }

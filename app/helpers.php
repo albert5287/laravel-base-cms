@@ -50,6 +50,7 @@ function getAllActiveModules()
     return Module::where('enabled', '=', true)->withTranslation()->get();
 }
 
+//TODO: TO DELETE
 //TODO: maybe change this to a base model and extend that model
 function insertUpdateMultiLanguage($element, $newValues)
 {
