@@ -35,6 +35,13 @@ abstract class DbRepository
     }
 
     /**
+     * @param array $attributes
+     */
+    public function firstOrCreate(array $attributes){
+        return $this->model->firstOrCreate($attributes);
+    }
+
+    /**
      * Update a record in the database.
      * @param $entity
      * @param array $data

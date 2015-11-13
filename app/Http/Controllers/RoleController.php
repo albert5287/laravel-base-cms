@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Repositories\ApplicationRepository;
+use Acme\Repositories\ModuleRepository;
+use Acme\Repositories\PermissionRepository;
+use Acme\Repositories\RoleRepository;
 use App\Application;
 use App\Http\Requests\RolesRequest;
 use App\Module;
@@ -18,18 +22,34 @@ class RoleController extends BaseController
 {
     protected $className = 'Role';
     protected $application;
+    protected $roleRepository;
+    protected $applicationRepository;
+    protected $moduleRepository;
+    protected $permissionRepository;
 
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
+     * @param RoleRepository $roleRepository
+     * @param ApplicationRepository $applicationRepository
+     * @param ModuleRepository $moduleRepository
+     * @param PermissionRepository $permissionRepository
      */
-    public function __construct()
-    {
+    public function __construct(
+        RoleRepository $roleRepository,
+        ApplicationRepository $applicationRepository,
+        ModuleRepository $moduleRepository,
+        PermissionRepository $permissionRepository
+    ) {
         parent::__construct();
+        $this->roleRepository = $roleRepository;
+        $this->applicationRepository = $applicationRepository;
+        $this->moduleRepository = $moduleRepository;
+        $this->permissionRepository = $permissionRepository;
         $urlParameters = Route::current()->parameters(); //get the app_id from the url
-        if(isset($urlParameters['app_id'])) {
-            $this->application = Application::find($urlParameters['app_id']); //set the application
+        if (isset($urlParameters['app_id'])) {
+            $this->application = $this->applicationRepository->find($urlParameters['app_id']); //set the application
             $this->customUrlEditParameters = [$urlParameters['app_id']];
         }
         $this->middleware('auth');
@@ -76,12 +96,12 @@ class RoleController extends BaseController
         $permissions = isset($data['permissions']) ? array_keys($data['permissions']) : [];
         DB::beginTransaction();
         try {
-            $role = Role::create([
+            $role = $this->roleRepository->create([
                 'name' => $data['name'],
                 'slug' => $app_id . '.' . $data['name'],
                 'description' => $data['description']
             ]);
-            $this->application->roles()->attach($role);
+            $this->applicationRepository->attachRoles($this->application, $role);
             $this->attachPermissionsRole($role, $permissions);
             flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
             DB::commit();
@@ -104,7 +124,7 @@ class RoleController extends BaseController
     public function edit($role_id, $app_id)
     {
         $this->setReturnUrl();
-        $role = Role::find($role_id);
+        $role = $this->roleRepository->find($role_id);
         $pageTitle = trans('strings.TITLE_EDIT_NEWS_PAGE');
         $modulesApplication = $this->getModulesApplication();
         $arrayPermissions = $role->permissions->lists('name')->toArray();
@@ -121,11 +141,11 @@ class RoleController extends BaseController
     public function update(RolesRequest $request, $role_id)
     {
         $data = $request->all();
-        $role = Role::find($role_id);
+        $role = $this->roleRepository->find($role_id);
         $permissions = isset($data['permissions']) ? array_keys($data['permissions']) : [];
         DB::beginTransaction();
         try {
-            $role->update($data);
+            $this->roleRepository->update($role, $data);
             $role->detachAllPermissions();
             $this->attachPermissionsRole($role, $permissions);
             flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
@@ -148,11 +168,8 @@ class RoleController extends BaseController
     public function destroy($roles)
     {
         $this->setReturnUrl();
-        $role = Role::find($roles);
-        $role->delete();
-
+        $this->roleRepository->delete($roles);
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_COMPANY'));
-
         return $this->redirectPreviousUrl();
     }
 
@@ -161,13 +178,13 @@ class RoleController extends BaseController
      */
     private function getModulesApplication()
     {
-        return $this->application
-            ->availableModules
-            ->merge(Module::defaultAppModules()->get());
+        $modulesApp = $this->application->availableModules;
+        $defaultModules = $this->moduleRepository->getDefaultAppModules();
+        return $modulesApp->merge($defaultModules);
     }
 
     /**
-     * function to attach permisions to a role
+     * function to attach permissions to a role
      * the function check if the permission exists if not it creates it
      * @param $role
      * @param $permissions
@@ -175,7 +192,7 @@ class RoleController extends BaseController
     private function attachPermissionsRole($role, $permissions)
     {
         foreach ($permissions as $namePermission) {
-            $permission = Permission::firstOrCreate([
+            $permission = $this->permissionRepository->firstOrCreate([
                 'name' => $namePermission,
                 'slug' => Str::lower($namePermission)
             ]);
@@ -183,15 +200,13 @@ class RoleController extends BaseController
         }
     }
 
-    /** function to get a custom collection
+    /**
+     * function to get a custom collection
      * @return mixed
      */
     protected function getCustomCollection()
     {
-        return $this->application
-            ->roles()
-            ->where('slug', '<>', $this->application->id . '.admin')
-            ->get();
+        return $this->applicationRepository->getRoles($this->application);
     }
 
 }

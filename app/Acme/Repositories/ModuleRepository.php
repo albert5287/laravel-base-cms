@@ -22,4 +22,12 @@ class ModuleRepository extends DbRepository
             ->get()
             ->lists('title', 'id');
     }
+
+    /**
+     *Get the default modules for apps
+     */
+    public function getDefaultAppModules()
+    {
+        return $this->model->defaultAppModules()->get();
+    }
 }

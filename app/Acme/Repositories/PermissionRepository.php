@@ -9,12 +9,12 @@
 namespace Acme\Repositories;
 
 
-use Bican\Roles\Models\Role;
 
-class RoleRepository extends DbRepository
+use Bican\Roles\Models\Permission;
+
+class PermissionRepository extends DbRepository
 {
-    function __construct(Role $model){
+    function __construct(Permission $model){
         $this->model = $model;
     }
-
 }

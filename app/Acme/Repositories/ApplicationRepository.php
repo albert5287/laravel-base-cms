@@ -12,7 +12,8 @@ use App\Application;
 
 class ApplicationRepository extends DbRepository
 {
-    function __construct(Application $model){
+    function __construct(Application $model)
+    {
         $this->model = $model;
     }
 
@@ -20,14 +21,28 @@ class ApplicationRepository extends DbRepository
      * @param $application
      * @param $data
      */
-    public function insertUpdateApplication($application, $data){
+    public function insertUpdateApplication($application, $data)
+    {
         $this->insertUpdateMultiLanguage($application, $data->all());
         $modulesToSync = null !== $data->input('_modules') ? $data->input('_modules') : [];
         $this->insertUpdateAvailableModules($application, $modulesToSync);
     }
 
-    public function attachRoles($application, $roles){
+    public function attachRoles($application, $roles)
+    {
         $application->roles()->attach($roles);
+    }
+
+    /**
+     * Get the roles of an app
+     * @param $application
+     * @return mixed
+     */
+    public function getRoles($application)
+    {
+        return $application->roles()
+            ->where('slug', '<>', $application->id . '.admin')
+            ->get();
     }
 
     /**
