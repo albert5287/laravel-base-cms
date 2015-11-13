@@ -1,4 +1,11 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: albert.gracia
+ * Date: 29.09.2015
+ * Time: 16:35
+ */
+use Acme\Repositories\ApplicationRepository;
 use App\Application;
 use App\Language;
 use App\Module;
@@ -8,19 +15,31 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
 /**
- * Created by PhpStorm.
- * User: albert.gracia
- * Date: 29.09.2015
- * Time: 16:35
+ * get the current user authenticate
+ * @return mixed
  */
-
 function getCurrentUser(){
     return Auth::user();
 }
 
+/**
+ * get the current app
+ * @return mixed
+ */
 function getCurrentApp(){
     return Session::get('currentApp');
 }
+
+/**
+ *
+ * set the current app
+ * @param $app
+ */
+function setCurrentApp($app){
+    Session::put('currentApp', $app);
+    Session::forget('availableUsers');
+}
+
 //TODO
 //filter by active languages
 //maybe change to the model
@@ -70,12 +89,18 @@ function insertUpdateMultiLanguage($element, $newValues)
     $element->save();
 }
 
+/**
+ * get Available Apps for a user
+ * first it checks in the session,
+ * if session is empty make the query
+ * @return mixed
+ */
 function getAvailableApps()
 {
     if (Session::has('availableApps')) {
         return Session::get('availableApps');
     } else {
-        return getAvailableAppsForOneUser(Auth::user());
+        return getAvailableAppsForOneUser(getCurrentUser());
     }
 }
 
@@ -88,7 +113,6 @@ function getAvailableUsers()
     }
 }
 
-//TODO: now is only for the super admin, complete for all kind of users
 /**Function to get all the available app for a user
  * and put them in the session
  * @return mixed
@@ -96,7 +120,8 @@ function getAvailableUsers()
 function getAvailableAppsForOneUser($user)
 {
     if ($user->is('super.admin')) {
-        $availableApps = Application::orderBy('name')->get();
+        $applicationRepository = new ApplicationRepository(new Application());
+        $availableApps = $applicationRepository->orderBy('name')->get();
     } else {
         $availableApps = $user->applications;
     }
