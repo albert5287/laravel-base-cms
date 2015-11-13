@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Repositories\LanguageRepository;
 use App\Http\Requests\LanguageRequest;
 use App\Language;
 use App\Module;
@@ -13,14 +14,18 @@ use Illuminate\Support\Facades\App;
 class LanguageController extends BaseController
 {
     protected $className = 'Language';
+    protected $languageRepository;
+
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
+     * @param LanguageRepository $languageRepository
      */
-    public function __construct(){
+    public function __construct(LanguageRepository $languageRepository){
         parent::__construct();
         $this->middleware('auth');
+        $this->languageRepository = $languageRepository;
     }
 
     /**
@@ -30,12 +35,9 @@ class LanguageController extends BaseController
      */
     public function index()
     {
-
         $pageTitle = $this->module->title;
-
         $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_LANGUAGES'),
                         'code' => trans('strings.HEADER_TABLE_FOR_CODE_IN_LANGUAGES')];
-
         return $this->setupTable($pageTitle, $headerTable);
     }
 
@@ -47,7 +49,6 @@ class LanguageController extends BaseController
     public function create()
     {
         $pageTitle = trans('strings.TITLE_CREATE_LANGUAGE_PAGE');
-
         return view('language.create', compact('pageTitle'));
     }
 
@@ -59,10 +60,8 @@ class LanguageController extends BaseController
     public function store(LanguageRequest $request)
     {
         $language = new Language();
-        insertUpdateMultiLanguage($language, $request->all());
-
+        $this->languageRepository->insertUpdateMultiLanguage($language, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_LANGUAGE'));
-
         return redirect('languages');
     }
 
@@ -75,7 +74,6 @@ class LanguageController extends BaseController
     public function edit(Language $language)
     {
         $this->setReturnUrl();
-
         $pageTitle = trans('strings.TITLE_EDIT_LANGUAGE_PAGE');
         return view('language.edit', compact('language', 'pageTitle'));
     }
@@ -84,14 +82,13 @@ class LanguageController extends BaseController
      * Update the specified resource in storage.
      *
      * @param  Language $language
+     * @param LanguageRequest $request
      * @return Response
      */
     public function update(Language $language, LanguageRequest $request)
     {
-        insertUpdateMultiLanguage($language, $request->all());
-
+        $this->languageRepository->insertUpdateMultiLanguage($language, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_LANGUAGE'));
-
         return $this->redirectPreviousUrl('languages');
     }
 
@@ -104,11 +101,8 @@ class LanguageController extends BaseController
     public function destroy(Language $language)
     {
         $this->setReturnUrl();
-
-        $language->delete();
-
+        $this->languageRepository->delete($language);
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_LANGUAGE'));
-
         return $this->redirectPreviousUrl('languages');
     }
 
