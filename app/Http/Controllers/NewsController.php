@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Repositories\NewsRepository;
 use App\Http\Requests\NewsRequest;
 use App\Media;
 use App\Module;
@@ -14,17 +15,20 @@ class NewsController extends BaseController
 {
 
     protected $className = 'News';
+    protected $newsRepository;
 
 
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
+     * @param NewsRepository $newsRepository
      */
-    public function __construct()
+    public function __construct(NewsRepository $newsRepository)
     {
         parent::__construct();
         $this->middleware('auth');
+        $this->newsRepository = $newsRepository;
     }
 
     /**
@@ -35,12 +39,10 @@ class NewsController extends BaseController
     public function index($module_application_id = 0)
     {
         $pageTitle = $this->module->title;
-
         $headerTable = [
             'title' => trans('strings.LABEL_FOR_TITLE'),
             'subtitle' => trans('strings.LABEL_FOR_SUBTITLE')
         ];
-
         return $this->setupTable($pageTitle, $headerTable, $module_application_id, 'partials.contentModule.index');
     }
 
@@ -53,7 +55,6 @@ class NewsController extends BaseController
     {
         $this->setReturnUrl();
         $pageTitle = trans('strings.TITLE_CREATE_PAGE_NEWS');
-
         return view('news.create', compact('pageTitle', 'module_application_id'));
     }
 
@@ -66,10 +67,8 @@ class NewsController extends BaseController
     public function store(NewsRequest $request)
     {
         $new = new News();
-        $this->insertUpdateNew($new, $request);
-
+        $this->newsRepository->insertUpdateNew($new, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
-
         return $this->redirectPreviousUrl('news/' . $new->module_application_id);
     }
 
@@ -82,7 +81,6 @@ class NewsController extends BaseController
     public function edit(News $new)
     {
         $this->setReturnUrl();
-
         $pageTitle = trans('strings.TITLE_EDIT_NEWS_PAGE');
         return view('news.edit', compact('new', 'pageTitle'));
     }
@@ -96,26 +94,9 @@ class NewsController extends BaseController
      */
     public function update(News $new, NewsRequest $request)
     {
-        $this->insertUpdateNew($new, $request);
-
+        $this->newsRepository->insertUpdateNew($new, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_LANGUAGE'));
-
         return $this->redirectPreviousUrl('modules');
-    }
-
-    /**
-     * function to insert or update a new news
-     * @param News $new
-     * @param NewsRequest $request
-     */
-    private function insertUpdateNew(News $new, NewsRequest $request)
-    {
-        $data = $request->all();
-        insertUpdateMultiLanguage($new, $data);
-        $relatedMedia = isset($data['_relatedMedia']) ? $data['_relatedMedia'] : [];
-        $new->syncMedia($relatedMedia);
-
-
     }
 
     /**
@@ -127,11 +108,8 @@ class NewsController extends BaseController
     public function destroy(News $new)
     {
         $this->setReturnUrl();
-
-        $new->delete();
-
+        $this->newsRepository->delete($new);
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_COMPANY'));
-
         return $this->redirectPreviousUrl('news');
     }
 }
