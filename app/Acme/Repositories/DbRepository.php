@@ -47,6 +47,10 @@ abstract class DbRepository
         return $this->model->all();
     }
 
+    public function where($column, $operator = null, $value = null, $boolean = 'and'){
+        return $this->model->where($column, $operator, $value, $boolean);
+    }
+
     /**
      * @param $column
      * @param null $key

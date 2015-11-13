@@ -12,9 +12,6 @@ use App\Http\Controllers\Controller;
 class ModuleController extends BaseController
 {
     protected $className = 'Module';
-    /**
-     * @var ModuleRepository
-     */
     protected $moduleRepository;
 
     /**
