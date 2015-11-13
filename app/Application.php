@@ -11,6 +11,10 @@ class Application extends Model
         'company_id',
     ];
 
+    /**
+     * relation between module and application
+     * @return mixed
+     */
     public function availableModules(){
         return $this->belongsToMany('App\Module')->withTimestamps()->withTranslation();
     }
@@ -29,6 +33,11 @@ class Application extends Model
         return $this->belongsToMany('Bican\Roles\Models\Role')->withTimestamps();
     }
 
+    /**
+     * function to check if 2 applications are the same
+     * @param Application $app
+     * @return bool
+     */
     public function isEqual(Application $app){
         return $this->id === $app->id;
     }

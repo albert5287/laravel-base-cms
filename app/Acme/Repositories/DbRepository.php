@@ -35,10 +35,19 @@ abstract class DbRepository
     }
 
     /**
+     * Get the first record matching the attributes or instantiate it.
      * @param array $attributes
      */
     public function firstOrCreate(array $attributes){
         return $this->model->firstOrCreate($attributes);
+    }
+
+    /**
+     * @param array $attributes
+     * @return mixed
+     */
+    public function firstOrNew(array $attributes){
+        return $this->model->firstOrNew($attributes);
     }
 
     /**

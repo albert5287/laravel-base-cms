@@ -28,6 +28,11 @@ class ApplicationRepository extends DbRepository
         $this->insertUpdateAvailableModules($application, $modulesToSync);
     }
 
+    /**
+     * function to attach roles to an application
+     * @param $application
+     * @param $roles
+     */
     public function attachRoles($application, $roles)
     {
         $application->roles()->attach($roles);
@@ -43,6 +48,15 @@ class ApplicationRepository extends DbRepository
         return $application->roles()
             ->where('slug', '<>', $application->id . '.admin')
             ->get();
+    }
+
+    /**
+     * get users of an application
+     * @param $application
+     * @return mixed
+     */
+    public function getUsers($application){
+        return $application->users()->get();
     }
 
     /**

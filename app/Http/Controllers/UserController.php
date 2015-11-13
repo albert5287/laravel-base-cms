@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Repositories\ApplicationRepository;
+use Acme\Repositories\UserRepository;
 use App\Application;
 use App\Http\Requests\UserRequest;
 use App\User;
@@ -18,19 +20,29 @@ class UserController extends BaseController
 
     protected $className = 'User';
     protected $application;
+    protected $userRepository;
+    protected $applicationRepository;
 
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
+     * @param UserRepository $userRepository
+     * @param ApplicationRepository $applicationRepository
      */
-    public function __construct(){
+    public function __construct(
+        UserRepository $userRepository,
+        ApplicationRepository $applicationRepository
+    ) {
         parent::__construct();
+        $this->userRepository = $userRepository;
+        $this->applicationRepository = $applicationRepository;
         $urlParameters = Route::current()->parameters();
-        $this->application = Application::find($urlParameters['app_id']);
+        $this->application = $this->applicationRepository->find($urlParameters['app_id']);
         $this->customUrlEditParameters = [$urlParameters['app_id']];
         $this->customUrlDeleteParameters = [$urlParameters['app_id']];
         $this->middleware('auth');
+
     }
 
     /**
@@ -42,9 +54,7 @@ class UserController extends BaseController
     public function index($app_id)
     {
         $pageTitle = $this->module->title;
-
         $headerTable = ['name' => trans('strings.LABEL_NAME'), 'email' => trans('strings.LABEL_EMAIL')];
-
         return $this->setupTable($pageTitle, $headerTable, $app_id, 'users.index', $this->application);
     }
 
@@ -57,7 +67,7 @@ class UserController extends BaseController
     public function create($app_id)
     {
         $this->setReturnUrl();
-        $rolesApplication = $this->getRolesApplication();
+        $rolesApplication = $this->userRepository->getListRolesToAssign($this->application, getCurrentUser());
         $pageTitle = trans('strings.TITLE_CREATE_PAGE_USER');
         $userRoles = [];
         return view('users.create', compact('pageTitle', 'app_id', 'rolesApplication', 'userRoles'));
@@ -74,31 +84,30 @@ class UserController extends BaseController
         $data = $request->all();
         DB::beginTransaction();
         try {
-            $user = User::firstOrNew([
+            $user = $this->userRepository->firstOrNew([
                 'email' => $data['email'],
             ]);
             $roles = [];
-            //if the user doesn't exist, I create one
-            if(!$user->id){
-                //create user
-                $user->name = $data['name'];
-                $user->password = bcrypt($data['password']);
-                $user->save();
+            //if the user doesn't exist
+            if (!$user->id) {
+                //update user data
+                $user = $this->userRepository->update($user,
+                    [
+                        'name' => $data['name'],
+                        'password' => bcrypt($data['password'])
+                    ]
+                );
                 flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
-            }
-            //if the user exists
-            else{
+            } //if the user exists
+            else {
                 //get user's roles from other apps
-                $roles = $user
-                    ->getRolesByApp($app_id, '<>')
-                    ->lists('id')
-                    ->toArray();
+                $roles = $this->userRepository->getArrayListRolesByApp($user, $app_id, '<>');
                 flash()->info(trans('strings.MESSAGE_INFO_USER_EXIST_ALREADY'));
             }
             //link user to the app
-            $user->applications()->attach($data['app_id']);
+            $this->userRepository->attachToApplication($user, $data['app_id']);
             //sync user's roles
-            $this->syncUserRoles($user, $roles, $data['roleList']);
+            $this->userRepository->syncRoles($user, $roles, $data['roleList']);
 
             DB::commit();
             // all good
@@ -113,7 +122,7 @@ class UserController extends BaseController
     /**
      * Show the form for editing the specified resource.
      *
-     * @param $role_id
+     * @param $user
      * @param $app_id
      * @return Response
      */
@@ -121,11 +130,8 @@ class UserController extends BaseController
     {
         $this->setReturnUrl();
         $pageTitle = trans('strings.TITLE_EDIT_NEWS_PAGE');
-        $rolesApplication = $this->getRolesApplication();
-        $userRoles = $user
-            ->getRolesByApp($app_id)
-            ->lists('id')
-            ->toArray();
+        $rolesApplication = $this->userRepository->getListRolesToAssign($this->application, getCurrentUser());
+        $userRoles = $this->userRepository->getArrayListRolesByApp($user, $app_id);
         return view('users.edit', compact('user', 'pageTitle', 'app_id', 'rolesApplication', 'userRoles'));
     }
 
@@ -142,20 +148,15 @@ class UserController extends BaseController
         $data = $request->all();
         DB::beginTransaction();
         try {
-            if($data['password'] === ''){
+            if ($data['password'] === '') {
                 unset($data['password']);
-            }
-            else{
+            } else {
                 $data['password'] = bcrypt($data['password']);
             }
-            $user->update($data);
+            $this->userRepository->update($user, $data);
             //get user's roles from other apps
-            $roles = $user
-                ->getRolesByApp($app_id, '<>')
-                ->lists('id')
-                ->toArray();
-            $this->syncUserRoles($user, $roles, $data['roleList']);
-
+            $roles = $this->userRepository->getArrayListRolesByApp($user, $app_id, '<>');
+            $this->userRepository->syncRoles($user, $roles, $data['roleList']);
             flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_MODULE'));
             DB::commit();
             // all good
@@ -177,48 +178,20 @@ class UserController extends BaseController
     {
         $this->setReturnUrl();
         //get user's apps
-        $userApps = $user
-            ->applications()
-            ->where('application_id', '<>', $app_id)
-            ->get();
+        $userApps = $this->userRepository->getOtherApplications($user, $app_id);
         //if the user don't have other apps
         //the user is deleted
-        if($userApps->isEmpty()){
-            $user->delete();
+        if ($userApps->isEmpty()) {
+            $this->userRepository->delete($user);
             flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_USER'));
         }
         //if the user is linked to other apps
-        //remove roles from app
-        //and unlink user to the app
-        else{
-            //get user's roles from app
-            $userRoles = $user
-                ->getRolesByApp($app_id)
-                ->lists('id')
-                ->toArray();
-            //remove those roles from the user
-            foreach($userRoles as $role){
-                $user->detachRole($role);
-            }
-            //remove link between user an app
-            $user->applications()
-                ->detach($app_id);
+        //unlink from App
+        else {
+            $this->userRepository->unlinkFromApp($user, $app_id);
             flash()->success(trans('strings.MESSAGE_USER_UNLINK_TO_APP'));
         }
         return $this->redirectPreviousUrl();
-    }
-
-    /**
-     * Function to get a list with the available roles
-     * @return mixed
-     */
-    private function getRolesApplication()
-    {
-        return $this->application
-            ->roles()
-            ->where('level', '<=', Auth::user()->level())
-            ->get()
-            ->lists('name', 'id');
     }
 
     /**
@@ -227,22 +200,7 @@ class UserController extends BaseController
      */
     protected function getCustomCollection()
     {
-        return $this->application
-            ->users()
-            ->get();
+        return $this->applicationRepository->getUsers($this->application);
     }
 
-    /**
-     * function to sync the users roles
-     * @param $user
-     * @param $oldRoles
-     * @param $newRoles
-     */
-    private function syncUserRoles($user, $oldRoles, $newRoles)
-    {
-        //merge user's role from other with the one selected in this app
-        $roles = array_merge($oldRoles, $newRoles);
-        //sync user's roles
-        $user->roles()->sync($roles);
-    }
 }

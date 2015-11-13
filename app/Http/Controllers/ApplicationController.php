@@ -166,6 +166,4 @@ class ApplicationController extends BaseController
             return collect([getCurrentApp()]);
         }
     }
-
-
 }

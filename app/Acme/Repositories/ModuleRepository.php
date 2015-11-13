@@ -16,6 +16,10 @@ class ModuleRepository extends DbRepository
         $this->model = $model;
     }
 
+    /**
+     * function to get a list of the active content modules
+     * @return mixed
+     */
     public function getListActiveContentModules(){
         return $this->model
             ->activeContentModules()
