@@ -4,16 +4,10 @@ namespace App\Http\Controllers;
 
 use Acme\Repositories\ApplicationRepository;
 use Acme\Repositories\UserRepository;
-use App\Application;
 use App\Http\Requests\UserRequest;
-use App\User;
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Session;
 
 class UserController extends BaseController
 {
