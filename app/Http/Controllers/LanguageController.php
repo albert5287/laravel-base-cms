@@ -5,11 +5,7 @@ namespace App\Http\Controllers;
 use Acme\Repositories\LanguageRepository;
 use App\Http\Requests\LanguageRequest;
 use App\Language;
-use App\Module;
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\App;
 
 class LanguageController extends BaseController
 {
