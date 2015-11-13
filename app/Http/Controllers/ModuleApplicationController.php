@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers;
 
+use Acme\Repositories\ModuleApplicationRepository;
 use App\Http\Requests\ModuleApplicationRequest;
-use App\Module;
 use App\ModuleApplication;
-use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Session;
 
 class ModuleApplicationController extends BaseController
 {
     protected $className = 'ModuleApplication';
+    protected $moduleApplicationRepository;
+
     /**
      * Constructor.
      *
      * check the authentication for every method in this controller
+     * @param ModuleApplicationRepository $moduleApplicationRepository
      */
-    public function __construct(){
+    public function __construct(ModuleApplicationRepository $moduleApplicationRepository){
         parent::__construct();
         $this->middleware('auth');
+        $this->moduleApplicationRepository = $moduleApplicationRepository;
     }
 
     /**
@@ -31,10 +32,8 @@ class ModuleApplicationController extends BaseController
     public function index()
     {
         $pageTitle = $this->module->title;
-
         $headerTable = ['name' => trans('strings.HEADER_TABLE_FOR_NAME_IN_MODULES_APPLICATION'),
             'module.name' => trans('strings.HEADER_TABLE_FOR_MODULE_TYPE_IN_MODULES_APPLICATION')];
-
         return $this->setupTable($pageTitle, $headerTable);
     }
 
@@ -46,9 +45,7 @@ class ModuleApplicationController extends BaseController
     public function create()
     {
         $pageTitle = trans('strings.TITLE_CREATE_MODULES_APPLICATION_PAGE');
-
-        $modules = $this->getListAvailableContentModules();
-
+        $modules = $this->moduleApplicationRepository->getListAvailableContentModules(getCurrentApp());
         return view('modules-app.create', compact('pageTitle', 'modules'));
     }
 
@@ -61,11 +58,8 @@ class ModuleApplicationController extends BaseController
     public function store(ModuleApplicationRequest $request)
     {
         $moduleApplication = new ModuleApplication();
-
-        insertUpdateMultiLanguage($moduleApplication, $request->all());
-
+        $this->moduleApplicationRepository->insertUpdateMultiLanguage($moduleApplication, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_CREATE_APPLICATION_MODULE'));
-
         return redirect('modules-app');
     }
 
@@ -78,56 +72,47 @@ class ModuleApplicationController extends BaseController
     public function edit(ModuleApplication $module)
     {
         $this->setReturnUrl();
-
         $pageTitle = trans('strings.TITLE_EDIT_COMPANY_PAGE');
-
-        $modules = $this->getListAvailableContentModules();
-
+        $modules = $this->moduleApplicationRepository->getListAvailableContentModules(getCurrentApp());
         return view('modules-app.edit', compact('module', 'pageTitle', 'modules'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  ModuleApplication $module
+     * @param ModuleApplication $moduleApplication
      * @param ModuleApplicationRequest $request
      * @return Response
      */
-    public function update(ModuleApplication $module, ModuleApplicationRequest $request)
+    public function update(ModuleApplication $moduleApplication, ModuleApplicationRequest $request)
     {
-        insertUpdateMultiLanguage($module, $request->all());
-
+        $this->moduleApplicationRepository->insertUpdateMultiLanguage($moduleApplication, $request->all());
         flash()->success(trans('strings.MESSAGE_SUCCESS_EDIT_APPLICATION_MODULE'));
-
         return $this->redirectPreviousUrl('modules-app');
     }
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param  ModuleApplication $module
+     * @param  ModuleApplication $moduleApplication
      * @return Response
      */
-    public function destroy(ModuleApplication $module)
+    public function destroy(ModuleApplication $moduleApplication)
     {
         $this->setReturnUrl();
-
-        $module->delete();
-
+        $this->moduleApplicationRepository->delete($moduleApplication);
         flash()->success(trans('strings.MESSAGE_SUCCESS_DELETE_APPLICATION_MODULE'));
-
         return $this->redirectPreviousUrl('modules-app');
     }
 
-    private function getListAvailableContentModules()
-    {
-        return ['' => ''] + Session::get('currentApp')->availableModules()->get()->lists('title', 'id')->all();
-    }
-
+    /**
+     * create custom collection
+     * @return mixed
+     */
     protected function getCustomCollection()
     {
-        return ModuleApplication::withTranslation()
-            ->where('application_id', '=', Session::get('currentApp')->id)
+        return $this->moduleApplicationRepository
+            ->where('application_id', '=', getCurrentApp()->id)
+            ->withTranslation()
             ->get();
     }
 }
